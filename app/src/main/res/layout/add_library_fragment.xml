@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="@color/background_third_taupe">
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignEnd="@+id/preview"
+        android:rotation="90"
+        android:layout_marginEnd="@dimen/large_20dp"
+        android:text="Placer une partie de votre bibliothèque "
+        />
+    <com.aprouxdev.mabibliotheque.tools.camera.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="250dp"
+        android:layout_height="550dp"
+        android:layout_centerInParent="true">
+
+        <com.aprouxdev.mabibliotheque.tools.camera.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.aprouxdev.mabibliotheque.tools.camera.CameraSourcePreview>
+
+    <TextView
+        android:id="@+id/tvCountDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"
+        android:textStyle="bold"
+        android:textColor="@android:color/holo_blue_bright"
+        android:textSize="90sp"
+        android:rotation="90"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignStart="@+id/preview"
+        android:layout_alignParentStart="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/captureButton"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:background="@color/background_secondary_grey"
+            android:rotation="90"
+            android:src="@drawable/camera_icon"
+            app:layout_constraintBottom_toTopOf="@+id/finishButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/finishButton"
+            android:layout_width="80dp"
+            android:layout_height="45dp"
+            android:background="@color/background_secondary_grey"
+            android:rotation="90"
+            android:text="@string/finished"
+            android:textColor="@color/text_fifth_turquoise"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/captureButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</RelativeLayout>

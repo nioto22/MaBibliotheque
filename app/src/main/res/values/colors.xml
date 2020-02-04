@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#002447</color>
+    <color name="colorPrimaryDark">#17224D</color>
+    <color name="colorAccent">#53D3D1</color>
+
+    <!-- BACKGROUNDS -->
+    <color name="background_primary_blue">#002447</color>
+    <color name="background_secondary_grey">#6C97AF</color>
+    <color name="background_third_taupe">#EEE8D5</color>
+    <color name="background_turquoise">#53D3D1</color>
+    <color name="background_orange">#FEB249</color>
+
+    <!-- TEXT COLORS -->
+    <color name="text_primary_black">#000000</color>
+    <color name="text_secondary_white">#FFFFFF</color>
+    <color name="text_third_orange">#FEB249</color>
+    <color name="text_fourth_grey">#6C97AF</color>
+    <color name="text_fifth_turquoise">#53D3D1</color>
+</resources>

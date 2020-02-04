@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="thin_2dp">2dp</dimen>
+    <dimen name="xs_4dp">4dp</dimen>
+    <dimen name="small_8dp">8dp</dimen>
+    <dimen name="normal_10dp">10dp</dimen>
+    <dimen name="medium_12dp">12dp</dimen>
+    <dimen name="large_20dp">20dp</dimen>
+    <dimen name="xl_40dp">40dp</dimen>
+    <dimen name="book_thumbnail_width">128dp</dimen>
+    <dimen name="book_thumbnail_height">200dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+</resources>

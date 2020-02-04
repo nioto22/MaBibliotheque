@@ -1,0 +1,130 @@
+package com.aprouxdev.mabibliotheque.ui.main.addBook;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Predicate;
+
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+
+import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.models.Book;
+import com.aprouxdev.mabibliotheque.ui.camera.SimpleCaptureActivity;
+import com.jakewharton.rxbinding2.widget.RxTextView;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static android.app.Activity.RESULT_OK;
+import static com.uber.autodispose.AutoDispose.autoDisposable;
+
+public class AddBookFragment extends Fragment implements View.OnClickListener{
+    private static final String TAG = "AddBookFragment";
+
+    public static final int SIMPLE_CAPTURE_REQUEST_CODE = 220;
+
+    private AddBookViewModel viewModel;
+    private BookAdapter booksAdapter;
+
+    private EditText bookSearchInput;
+    private RecyclerView booksRecycler;
+    private ImageButton captureButton;
+
+    public static AddBookFragment newInstance() {
+        return new AddBookFragment();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.add_book_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+
+        setupViews(view);
+        subscribeObservers();
+        subscribeListeners();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        subscribeObservers();
+        subscribeListeners();
+
+        if (requestCode == SIMPLE_CAPTURE_REQUEST_CODE && RESULT_OK == resultCode){
+            CharSequence intentText = data.getStringExtra(SimpleCaptureActivity.BUNDLE_EXTRA_TEXT);
+            bookSearchInput.setText(intentText);
+            bookSearchInput.getOnFocusChangeListener();
+
+        }
+    }
+
+    private void setupViews(View view) {
+        bookSearchInput = view.findViewById(R.id.book_search_input);
+        booksRecycler = view.findViewById(R.id.books_recycler);
+        captureButton = view.findViewById(R.id.capture_button);
+
+        viewModel = ViewModelProviders.of(this).get(AddBookViewModel.class);
+        viewModel.init();
+
+        final GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);
+        booksRecycler.setLayoutManager(layoutManager);
+        booksAdapter = new BookAdapter();
+        booksRecycler.setAdapter(booksAdapter);
+
+    }
+
+    private void subscribeObservers() {
+        RxTextView.textChanges(bookSearchInput)
+                .debounce(500, TimeUnit.MILLISECONDS)
+                .filter(inputText -> !TextUtils.isEmpty(inputText))
+                .as(autoDisposable(AndroidLifecycleScopeProvider.from(this)))
+                .subscribe(inputText -> viewModel.searchBooks(inputText));;
+
+        viewModel.getBooks().observe(getViewLifecycleOwner(), booksAdapter::displayNewBooks);
+    }
+
+    private void subscribeListeners() { captureButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case (R.id.capture_button):{
+                Intent intent = new Intent(getActivity(), SimpleCaptureActivity.class);
+                startActivityForResult(intent, SIMPLE_CAPTURE_REQUEST_CODE);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+}

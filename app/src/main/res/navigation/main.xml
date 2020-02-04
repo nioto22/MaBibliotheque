@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@+id/homeScreen"
+    >
+
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment"
+        android:label="@string/home"
+        tools:layout="@layout/home_fragment"/>
+
+    <fragment
+        android:id="@+id/addBookScreen"
+        android:name="com.aprouxdev.mabibliotheque.ui.main.addBook.AddBookFragment"
+        android:label="@string/add_book"
+        tools:layout="@layout/add_book_fragment"/>
+
+    <fragment
+        android:id="@+id/addLibraryScreen"
+        android:name="com.aprouxdev.mabibliotheque.ui.main.addLibrary.AddLibraryFragment"
+        android:label="@string/add_library"
+        tools:layout="@layout/add_library_fragment"/>
+
+
+</navigation>
