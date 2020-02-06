@@ -1,10 +1,5 @@
 package com.aprouxdev.mabibliotheque.ui.camera;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,13 +12,12 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
@@ -40,7 +34,12 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.lifecycle.ViewModelProviders;
 
 public class SimpleCaptureActivity extends AppCompatActivity {
 
@@ -53,10 +52,10 @@ public class SimpleCaptureActivity extends AppCompatActivity {
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
     // Constants used to pass extra data in different intents
-        // Permission Intent
+    // Permission Intent
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
-        // Set result to AddBook intent
+    // Set result to AddBook intent
     public static final String BUNDLE_EXTRA_TEXT = "BUNDLE_EXTRA_TEXT";
 
     // Helper objects for detecting taps and pinches.
@@ -83,11 +82,14 @@ public class SimpleCaptureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_capture);
 
+
+
         preview = findViewById(R.id.cameraPreview);
         graphicOverlay = findViewById(R.id.graphicOverlay);
 
         viewModel = ViewModelProviders.of(this).get(SimpleCaptureViewModel.class);
 
+        setupActionBar();
         setupCameraDefaults();
 
         if (cameraPermissionIsGranted()){
@@ -100,11 +102,28 @@ public class SimpleCaptureActivity extends AppCompatActivity {
         scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
+    private void setupActionBar() {
+        ActionBar actionBar = this.getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
 
     private void setupCameraDefaults() {
         autoFocus = true;
         useFlash = false;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId() == android.R.id.home){
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {

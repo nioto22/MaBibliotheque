@@ -10,6 +10,7 @@
     <color name="background_third_taupe">#EEE8D5</color>
     <color name="background_turquoise">#53D3D1</color>
     <color name="background_orange">#FEB249</color>
+    <color name="white">#ffffff</color>
 
     <!-- TEXT COLORS -->
     <color name="text_primary_black">#000000</color>
@@ -17,4 +18,7 @@
     <color name="text_third_orange">#FEB249</color>
     <color name="text_fourth_grey">#6C97AF</color>
     <color name="text_fifth_turquoise">#53D3D1</color>
+    <color name="text_dark_gray">#6c6c6c</color>
+
+
 </resources>

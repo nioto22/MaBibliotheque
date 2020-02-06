@@ -5,9 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:id="@+id/drawer_layout">
-
+    <!--android:fitsSystemWindows="true" -->
 
     <fragment
         android:layout_width="0dp"
@@ -36,11 +35,14 @@
 
 
     <com.google.android.material.navigation.NavigationView
+        app:headerLayout="@layout/drawer_header"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@color/white"
+        app:itemTextColor="@color/text_dark_gray"
+        app:itemIconTint="@color/text_dark_gray"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         app:menu="@menu/drawer_view" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

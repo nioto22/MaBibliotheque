@@ -1,15 +1,31 @@
 package com.aprouxdev.mabibliotheque.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.aprouxdev.mabibliotheque.database.MetaData;
+
 import java.io.Serializable;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = MetaData.bookTableName)
 public class Book implements Serializable {
+    @PrimaryKey
+    @NonNull
     private String id;
     private String title;
+    private String author;
     private String thumbnailLink;
+    private String description;
     private Boolean hasBeenRead;
     private int mark;
     private String saveTimestamp;
     private String readTimestamp;
+
+
 
 
     // GETTER
@@ -19,6 +35,7 @@ public class Book implements Serializable {
     public String getTitle() {
         return title;
     }
+    public String getAuthor() { return author; }
     public String getThumbnailLink() {
         return thumbnailLink;
     }
@@ -26,7 +43,7 @@ public class Book implements Serializable {
      * @return null as base info do not have description data.
      */
     public String getDescription() {
-        return null;
+        return description;
     }
     public Boolean getHasBeenRead() { return hasBeenRead; }
     public int getMark() { return mark; }
@@ -41,6 +58,10 @@ public class Book implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    public void setAuthor(String author) { this.author = author; }
+
+    public void setDescription(String description) {  this.description = description; }
+
     public void setThumbnailLink(String thumbnailLink) {
         this.thumbnailLink = thumbnailLink;
     }
@@ -48,4 +69,6 @@ public class Book implements Serializable {
     public void setMark(int mark) { this.mark = mark; }
     public void setSaveTimestamp(String saveTimestamp) { this.saveTimestamp = saveTimestamp; }
     public void setReadTimestamp(String readTimestamp) { this.readTimestamp = readTimestamp; }
+
+
 }

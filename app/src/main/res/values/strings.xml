@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ma Bibliothèque</string>
     <string name="logout">Logout</string>
-    <string name="home">Ma bibliothèque</string>
+    <string name="home">Accueil</string>
     <string name="ok">OK</string>
 
 
@@ -21,8 +21,19 @@
     <string name="ocr_success">Text read successfully</string>
     <string name="ocr_failure">No text captured</string>
     <string name="ocr_error">"Error reading text: %1$s"</string>
-    <string name="add_library">Ajouter bibliothèque</string>
+    <string name="add_library">Scanner bibliothèque</string>
     <string name="finished">Terminé</string>
+    <string name="library">Bibliothèque</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="orientation_instruction">Veuillez basculer votre téléphone</string>
+    <string name="save">Save</string>
+    <string name="parameter">Paramètres</string>
+    <string name="profile">Profile</string>
+    <string name="action_main">Main Action</string>
+    <string name="informations">Informations</string>
+    <string name="comment">Commentaires</string>
+    <string name="description">Description</string>
 
 
 </resources>

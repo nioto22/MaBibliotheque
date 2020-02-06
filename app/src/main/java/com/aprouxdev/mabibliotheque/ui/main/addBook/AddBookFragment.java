@@ -1,41 +1,31 @@
 package com.aprouxdev.mabibliotheque.ui.main.addBook;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
-
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
+import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
 import com.aprouxdev.mabibliotheque.ui.camera.SimpleCaptureActivity;
 import com.jakewharton.rxbinding2.widget.RxTextView;
-import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.uber.autodispose.AutoDispose.autoDisposable;
@@ -44,6 +34,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "AddBookFragment";
 
     public static final int SIMPLE_CAPTURE_REQUEST_CODE = 220;
+    public static final String BUNDLE_EXTRA_BOOK = "BUNDLE_EXTRA_BOOK";
 
     private AddBookViewModel viewModel;
     private BookAdapter booksAdapter;
@@ -64,7 +55,6 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
 
         setupViews(view);
         subscribeObservers();
@@ -99,6 +89,18 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
         booksRecycler.setLayoutManager(layoutManager);
         booksAdapter = new BookAdapter();
         booksRecycler.setAdapter(booksAdapter);
+
+        booksAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Book selectedBook = booksAdapter.getBook(position);
+                Log.d(TAG, "onItemClick: ");
+                Log.d(TAG, "onItemClick: " + selectedBook.getTitle());
+                Intent intent = new Intent(getContext(), BookDetailActivity.class);
+                intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
+                startActivity(intent);
+            }
+        });
 
     }
 

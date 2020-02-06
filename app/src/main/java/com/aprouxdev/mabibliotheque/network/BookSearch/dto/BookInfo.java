@@ -3,6 +3,7 @@ package com.aprouxdev.mabibliotheque.network.BookSearch.dto;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 
@@ -13,11 +14,15 @@ public class BookInfo implements Serializable {
     private static final long serialVersionUID = 8320625464585649346L;
 
     String title;
+    List<String> authors;
+    String author;
     ImageLinks imageLinks;
+    String description;
 
     public String getTitle() {
         return title;
     }
+    public String getAuthor() { return authors.get(0); }
 
     @Nullable
     public String getThumbnailLink() {
@@ -30,7 +35,7 @@ public class BookInfo implements Serializable {
      * @return null as base info do not have description data.
      */
     public String getDescription() {
-        return null;
+        return description;
     }
 
     public static class ImageLinks implements Serializable {

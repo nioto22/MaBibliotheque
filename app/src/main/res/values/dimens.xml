@@ -10,4 +10,5 @@
     <dimen name="book_thumbnail_width">128dp</dimen>
     <dimen name="book_thumbnail_height">200dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="medium_plus_30dp">30dp</dimen>
 </resources>

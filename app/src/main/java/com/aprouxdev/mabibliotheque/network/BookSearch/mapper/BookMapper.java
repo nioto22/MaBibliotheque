@@ -37,6 +37,7 @@ public class BookMapper {
 
         final BookInfo bookInfo = eBookInfo.getBookInfo();
         book.setTitle(bookInfo.getTitle());
+        book.setAuthor(bookInfo.getAuthor());
         book.setThumbnailLink(bookInfo.getThumbnailLink());
     }
 
