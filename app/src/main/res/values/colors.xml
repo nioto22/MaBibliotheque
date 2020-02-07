@@ -11,6 +11,7 @@
     <color name="background_turquoise">#53D3D1</color>
     <color name="background_orange">#FEB249</color>
     <color name="white">#ffffff</color>
+    <color name="primary_blue_light">#003970</color>
 
     <!-- TEXT COLORS -->
     <color name="text_primary_black">#000000</color>

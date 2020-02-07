@@ -16,6 +16,9 @@ public class BookInfo implements Serializable {
     String title;
     List<String> authors;
     String author;
+    int pageCount;
+    List<String> categories;
+    String category;
     ImageLinks imageLinks;
     String description;
 
@@ -23,6 +26,11 @@ public class BookInfo implements Serializable {
         return title;
     }
     public String getAuthor() { return authors.get(0); }
+    public Integer getPageCount() {  return pageCount; }
+    public String getCategory() {
+        if (categories == null) return null;
+        return categories.get(0);
+    }
 
     @Nullable
     public String getThumbnailLink() {

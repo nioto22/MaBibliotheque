@@ -8,7 +8,9 @@
         android:id="@+id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/medium_12dp"
+        android:background="@color/background_primary_blue">
     <EditText
         android:id="@+id/book_search_input"
         android:layout_width="match_parent"
@@ -27,13 +29,15 @@
         android:src="@drawable/camera_icon"
         android:background="@color/background_secondary_grey"
         android:layout_centerVertical="true"
-        android:padding="@dimen/small_8dp"/>
+        android:padding="@dimen/small_8dp"
+        android:layout_marginStart="@dimen/small_8dp"/>
     </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/books_recycler"
         android:layout_below="@id/search_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_third_taupe"/>
+        android:background="@color/background_third_taupe"
+        android:padding="@dimen/medium_12dp"/>
 
 </RelativeLayout>

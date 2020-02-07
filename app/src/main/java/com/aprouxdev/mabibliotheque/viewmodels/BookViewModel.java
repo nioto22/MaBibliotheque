@@ -17,12 +17,12 @@ import androidx.lifecycle.MutableLiveData;
 public class BookViewModel extends AndroidViewModel {
 
     private BookRepository bookRepository;
-    private MutableLiveData<List<Book>> books;
+    private LiveData<List<Book>> books;
 
     public BookViewModel(@NonNull Application application){
         super(application);
         bookRepository = new BookRepository(application);
-        books = (MutableLiveData<List<Book>>) bookRepository.getAllBooks();
+        books = bookRepository.getAllBooks();
     }
 
     public LiveData<List<Book>> getBooks() {

@@ -1,17 +1,11 @@
 package com.aprouxdev.mabibliotheque.ui.main.library;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
@@ -19,9 +13,21 @@ import com.aprouxdev.mabibliotheque.viewmodels.BookViewModel;
 
 import java.util.List;
 
-public class LibraryFragment extends Fragment {
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+public class LibraryFragment extends Fragment implements View.OnClickListener{
+    private static final String TAG = "LibraryFragment";
+    // UI Vars
+    LinearLayout filterButton;
+
+
 
     private BookViewModel bookViewModel;
+
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -38,7 +44,20 @@ public class LibraryFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         bookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
 
+
         subscribeObservers();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        setupViews(view);
+    }
+
+    private void setupViews(View view) {
+        filterButton = view.findViewById(R.id.filterButton);
+        filterButton.setOnClickListener(this);
     }
 
     private void subscribeObservers() {
@@ -50,4 +69,14 @@ public class LibraryFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case (R.id.filterButton):
+                Log.d(TAG, "onClick: Filter button clicked");
+                break;
+            default:
+                break;
+        }
+    }
 }

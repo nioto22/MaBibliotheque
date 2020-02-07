@@ -20,9 +20,10 @@
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_edit"
             android:background="@color/background_turquoise"
-            android:layout_marginBottom="@dimen/large_20dp"
-            android:layout_marginEnd="@dimen/medium_12dp"
-            android:padding="@dimen/xs_4dp"/>
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:padding="@dimen/xs_4dp"
+            android:translationZ="10dp"/>
         <ImageView
             android:id="@+id/bookDetailImage"
             android:layout_width="128dp"
@@ -55,21 +56,34 @@
                 android:textStyle="bold"
                 android:textColor="@color/text_secondary_white"
                 android:layout_marginTop="@dimen/normal_10dp"/>
-
-            <TextView
-                android:id="@+id/bookDetailAuthor"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="de John Boyne"
-                android:textSize="18sp"
-                android:textColor="@color/text_secondary_white"/>
-
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/byAuthorTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/by"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_secondary_white"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"/>
+                <TextView
+                    android:id="@+id/bookDetailAuthor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="John Boyne"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_secondary_white"
+                    android:layout_toEndOf="@+id/byAuthorTextView"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
             <TextView
                 android:id="@+id/bookDetailReadDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_12dp"
-                android:text="lu le 05.03.2008"
+                android:text=""
                 android:textSize="16sp"
                 android:textColor="@color/text_secondary_white"/>
 
@@ -116,13 +130,144 @@
                     android:src="@drawable/ic_empty_star" />
             </LinearLayout>
         </LinearLayout>
+        <!-- Edit Top Container Layout -->
+        <LinearLayout
+            android:id="@+id/editTopContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/bookDetailImage"
+            android:layout_alignTop="@+id/bookDetailImage"
+            android:layout_marginEnd="@dimen/medium_12dp"
+            android:layout_marginBottom="@dimen/medium_12dp"
+            android:background="@color/background_turquoise"
+            android:visibility="invisible">
+            <EditText
+                android:id="@+id/bookDetailTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_secondary_white"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/normal_10dp">
+                <TextView
+                    android:id="@+id/byAuthorTextViewEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:text="@string/by"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_secondary_white"/>
+                <EditText
+                    android:id="@+id/bookDetailAuthorEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_secondary_white"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/byAuthorTextViewEdit"
+                    android:layout_alignParentEnd="true"/>
+            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="start|center_vertical"
+                android:layout_marginTop="@dimen/small_8dp"
+                android:layout_marginStart="@dimen/xs_4dp">
+                <TextView
+                    android:id="@+id/editReadStateTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:text="@string/not_read_state"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_secondary_white"/>
+                <Switch
+                    android:id="@+id/editReadStateSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:theme="@style/My.Widget.Switches"
+                    android:checked="false" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/small_8dp">
+
+                <ImageButton
+                    android:id="@+id/star1Button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/xs_4dp"
+                    android:src="@drawable/ic_full_edit_star"
+                    android:tag="1"
+                    android:onClick="onClickStarButton"/>
+
+                <ImageButton
+                    android:id="@+id/star2Button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/xs_4dp"
+                    android:src="@drawable/ic_full_edit_star"
+                    android:tag="2"
+                    android:onClick="onClickStarButton"/>
+
+                <ImageButton
+                    android:id="@+id/star3Button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/xs_4dp"
+                    android:src="@drawable/ic_full_edit_star"
+                    android:tag="3"
+                    android:onClick="onClickStarButton"/>
+
+                <ImageButton
+                    android:id="@+id/star4Button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/xs_4dp"
+                    android:src="@drawable/ic_full_edit_star"
+                    android:tag="4"
+                    android:onClick="onClickStarButton"/>
+
+                <ImageButton
+                    android:id="@+id/star5Button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="@dimen/small_8dp"
+                    android:background="@android:color/transparent"
+                    android:padding="@dimen/xs_4dp"
+                    android:src="@drawable/ic_empty_edit_star"
+                    android:tag="5"
+                    android:onClick="onClickStarButton"/>
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
+    <!-- BOTTOM CONTAINER -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="65"
         android:background="@color/background_secondary_grey">
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -130,9 +275,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/large_20dp">
 
                 <!-- INFORMATIONS -->
+                <!-- Information Title -->
                 <RelativeLayout
                     android:id="@+id/informationTitleLayout"
                     android:layout_width="match_parent"
@@ -164,10 +311,151 @@
                         android:id="@+id/informationButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="onClick"/>
                 </RelativeLayout>
+                <!-- Information Content -->
+                <RelativeLayout
+                    android:id="@+id/informationContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/medium_12dp"
+                    android:layout_marginEnd="@dimen/medium_12dp"
+                    android:background="@color/background_third_taupe"
+                    android:visibility="gone">
 
+                    <!-- Information Category -->
+                    <RelativeLayout
+                        android:id="@+id/informationContentCategoryLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true">
+                        <TextView
+                            android:id="@+id/categoryTitleTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/category"
+                            android:textStyle="bold"
+                            android:layout_margin="@dimen/small_8dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"/>
+                        <TextView
+                            android:id="@+id/categoryTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/categoryTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/not_specified"
+                            android:layout_centerVertical="true"/>
+                        <EditText
+                            android:id="@+id/categoryEditText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/categoryTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/background_third_taupe"
+                            android:visibility="invisible"/>
+                    </RelativeLayout>
+
+                    <!-- Information Number of page -->
+                    <RelativeLayout
+                        android:id="@+id/informationContentPagesLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/informationContentCategoryLayout"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true">
+                        <TextView
+                            android:id="@+id/pagesTitleTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pages"
+                            android:textStyle="bold"
+                            android:layout_margin="@dimen/small_8dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"/>
+                        <TextView
+                            android:id="@+id/pagesTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/pagesTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/not_specified"
+                            android:layout_centerVertical="true"/>
+                        <EditText
+                            android:id="@+id/pagesEditText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/pagesTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/background_third_taupe"
+                            android:visibility="invisible"/>
+                    </RelativeLayout>
+
+                    <!-- Information Loan -->
+                    <RelativeLayout
+                        android:id="@+id/informationContentLoanLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/informationContentPagesLayout"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentEnd="true">
+                        <TextView
+                            android:id="@+id/loanTitleTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/loan_to"
+                            android:textStyle="bold"
+                            android:layout_margin="@dimen/small_8dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"/>
+                        <TextView
+                            android:id="@+id/loanTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/loanTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/not_specified"
+                            android:layout_centerVertical="true"/>
+                        <EditText
+                            android:id="@+id/loanEditText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/small_8dp"
+                            android:layout_marginBottom="@dimen/small_8dp"
+                            android:layout_toEndOf="@+id/loanTitleTv"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@color/background_third_taupe"
+                            android:visibility="invisible"/>
+                    </RelativeLayout>
+                    <ImageButton
+                        android:id="@+id/editInformationContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_edit_gray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="@dimen/xs_4dp"
+                        android:translationZ="10dp"
+                        android:onClick="onClick"/>
+                </RelativeLayout>
                 <!-- DESCRIPTIONS -->
+                <!-- Description Title -->
                 <RelativeLayout
                     android:id="@+id/descriptionTitleLayout"
                     android:layout_width="match_parent"
@@ -176,8 +464,7 @@
                     android:layout_marginStart="@dimen/medium_12dp"
                     android:layout_marginEnd="@dimen/medium_12dp"
                     android:layout_marginTop="@dimen/large_20dp"
-                    android:background="@color/background_third_taupe"
-                    >
+                    android:background="@color/background_third_taupe">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -200,8 +487,10 @@
                         android:id="@+id/descriptionButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="onClick"/>
                 </RelativeLayout>
+                <!-- Description Content -->
                 <RelativeLayout
                     android:id="@+id/descriptionContentLayout"
                     android:layout_width="match_parent"
@@ -215,19 +504,36 @@
                         android:id="@+id/descriptionTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@string/not_specified"
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@+id/editDescriptionContent"
                         android:layout_marginStart="@dimen/small_8dp"
                         android:layout_marginTop="@dimen/xs_4dp"
                         android:layout_marginBottom="@dimen/small_8dp"/>
-                    <ImageView
+                    <EditText
+                        android:id="@+id/descriptionEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="@dimen/small_8dp"
+                        android:layout_marginTop="@dimen/xs_4dp"
+                        android:layout_marginBottom="@dimen/small_8dp"
+                        android:background="@color/background_third_taupe"
+                        android:visibility="invisible"/>
+                    <ImageButton
+                        android:id="@+id/editDescriptionContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_edit_gray"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_margin="@dimen/xs_4dp"/>
+                        android:layout_margin="@dimen/xs_4dp"
+                        android:translationZ="10dp"
+                        android:onClick="onClick"/>
                 </RelativeLayout>
 
                 <!-- COMMENT -->
+                <!-- Comment Title -->
                 <RelativeLayout
                     android:id="@+id/commentTitleLayout"
                     android:layout_width="match_parent"
@@ -259,9 +565,50 @@
                         android:id="@+id/commentButton"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        android:onClick="onClick"/>
                 </RelativeLayout>
-
+                <!-- Comment Content -->
+                <RelativeLayout
+                    android:id="@+id/commentContentLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="@dimen/medium_12dp"
+                    android:layout_marginEnd="@dimen/medium_12dp"
+                    android:background="@color/background_third_taupe"
+                    android:visibility="gone">
+                    <TextView
+                        android:id="@+id/commentTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/not_specified"
+                        android:layout_alignParentTop="true"
+                        android:layout_toStartOf="@+id/editCommentContent"
+                        android:layout_marginStart="@dimen/small_8dp"
+                        android:layout_marginTop="@dimen/xs_4dp"
+                        android:layout_marginBottom="@dimen/small_8dp"/>
+                    <EditText
+                        android:id="@+id/commentEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginStart="@dimen/small_8dp"
+                        android:layout_marginTop="@dimen/xs_4dp"
+                        android:layout_marginBottom="@dimen/small_8dp"
+                        android:background="@color/background_third_taupe"
+                        android:visibility="invisible"/>
+                    <ImageButton
+                        android:id="@+id/editCommentContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_edit_gray"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_margin="@dimen/xs_4dp"
+                        android:translationZ="10dp"
+                        android:onClick="onClick"/>
+                </RelativeLayout>
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

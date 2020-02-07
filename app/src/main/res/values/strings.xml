@@ -34,6 +34,28 @@
     <string name="informations">Informations</string>
     <string name="comment">Commentaires</string>
     <string name="description">Description</string>
+    <string name="read_state">Lu</string>
+    <string name="not_read_state">Pas encore lu</string>
 
+
+    <!-- Tools -->
+    <string name="month0">Jan</string>
+    <string name="month1">Fev</string>
+    <string name="month2">Mars</string>
+    <string name="month3">Avr</string>
+    <string name="month4">Mai</string>
+    <string name="month5">Juin</string>
+    <string name="month6">Juil</string>
+    <string name="month7">Août</string>
+    <string name="month8">Sept</string>
+    <string name="month9">Oct</string>
+    <string name="month10">Nov</string>
+    <string name="month11">Dec</string>
+    <string name="category">Genre :</string>
+    <string name="not_specified">Non renseigné</string>
+    <string name="pages">Nombre de pages</string>
+    <string name="loan_to">Prété à :</string>
+    <string name="blank" />
+    <string name="by">de</string>
 
 </resources>

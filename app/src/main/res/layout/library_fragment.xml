@@ -4,10 +4,125 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.library.LibraryFragment">
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:orientation="vertical"
+        android:weightSum="100">
+        <RelativeLayout
+            android:id="@+id/topContainerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="12"
+            android:orientation="vertical"
+            android:background="@color/background_primary_blue">
+            <RelativeLayout
+                android:id="@+id/topContainerInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="185 livres"
+                    android:textColor="@color/text_secondary_white"
+                    android:layout_margin="@dimen/small_8dp"
+                    android:paddingStart="@dimen/xs_4dp"
+                    android:paddingEnd="@dimen/xs_4dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"/>
+                <LinearLayout
+                    android:id="@+id/filterButton"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/custom_button_shape"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/medium_12dp"
+                    android:paddingTop="@dimen/thin_2dp"
+                    android:paddingBottom="@dimen/thin_2dp"
+                    android:gravity="center_horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:translationZ="@dimen/medium_12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="FILTRES"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary_white"/>
+                    <TextView
+                        android:id="@+id/numberOfFilterTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Aucun sélectionné"
+                        android:textSize="8sp"
+                        android:textColor="@color/text_secondary_white"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/sortingButton"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/custom_button_shape"
+                    android:layout_toStartOf="@+id/filterButton"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/medium_12dp"
+                    android:paddingTop="@dimen/thin_2dp"
+                    android:paddingBottom="@dimen/thin_2dp"
+                    android:gravity="center_horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:translationZ="@dimen/medium_12dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="TRI"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_secondary_white"/>
+                    <TextView
+                        android:id="@+id/sortTypeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Titre(A-Z)"
+                        android:textSize="8sp"
+                        android:textColor="@color/text_secondary_white"/>
+                </LinearLayout>
 
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/topContainerSearchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topContainerInfo"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/medium_12dp"
+                    android:layout_marginEnd="@dimen/medium_12dp"
+                    android:background="@color/primary_blue_light"
+                    android:hint="@string/search_book"
+                    android:textColorHint="@color/background_third_taupe"
+                    android:textColor="@color/text_secondary_white"
+                    android:paddingStart="@dimen/xs_4dp"/>
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="88"
+            android:background="@color/background_secondary_grey">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/medium_12dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.aprouxdev.mabibliotheque.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Editable;
 
 import com.aprouxdev.mabibliotheque.database.MetaData;
 
@@ -20,8 +21,12 @@ public class Book implements Serializable {
     private String author;
     private String thumbnailLink;
     private String description;
+    private String category;
+    private int pageCount;
     private Boolean hasBeenRead;
     private int mark;
+    private String comment;
+    private String loan;
     private String saveTimestamp;
     private String readTimestamp;
 
@@ -45,12 +50,15 @@ public class Book implements Serializable {
     public String getDescription() {
         return description;
     }
+    public String getCategory() { return category;   }
+    public int getPageCount() {  return pageCount;   }
     public Boolean getHasBeenRead() { return hasBeenRead; }
     public int getMark() { return mark; }
+    public String getComment() {  return comment;   }
+    public String getLoan() {  return loan; }
     public String getSaveTimestamp() { return saveTimestamp; }
     public String getReadTimestamp() { return readTimestamp; }
-
-    // SETTER
+// SETTER
 
     public void setId(String id) {
         this.id = id;
@@ -61,14 +69,18 @@ public class Book implements Serializable {
     public void setAuthor(String author) { this.author = author; }
 
     public void setDescription(String description) {  this.description = description; }
+    public void setCategory(String category) {  this.category = category; }
+    public void setPageCount(int pageCount) { this.pageCount = pageCount;  }
 
     public void setThumbnailLink(String thumbnailLink) {
         this.thumbnailLink = thumbnailLink;
     }
     public void setHasBeenRead(Boolean hasBeenRead) { this.hasBeenRead = hasBeenRead; }
     public void setMark(int mark) { this.mark = mark; }
+
+    public void setComment(String comment) {  this.comment = comment;  }
+    public void setLoan(String loan) { this.loan = loan; }
     public void setSaveTimestamp(String saveTimestamp) { this.saveTimestamp = saveTimestamp; }
     public void setReadTimestamp(String readTimestamp) { this.readTimestamp = readTimestamp; }
-
 
 }
