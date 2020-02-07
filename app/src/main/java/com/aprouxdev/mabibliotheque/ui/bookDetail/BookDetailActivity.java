@@ -2,11 +2,9 @@ package com.aprouxdev.mabibliotheque.ui.bookDetail;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,60 +36,60 @@ import java.util.List;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
-import static com.aprouxdev.mabibliotheque.ui.main.addBook.AddBookFragment.BUNDLE_EXTRA_BOOK;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.months;
 
 public class BookDetailActivity extends AppCompatActivity implements View.OnClickListener{
     private static final String TAG = "BookDetailActivity";
 
     // UI VARS
-        // Top container
-        ImageView bookDetailImage;
-        TextView bookDetailTitle;
-        TextView bookDetailAuthor;
-        TextView bookDetailReadDate;
-        ImageView star1, star2, star3, star4, star5;
-        ImageButton editPrimaryInfoButton;
-        // Edit Top container
-        LinearLayout editTopContainerLayout;
-        EditText bookDetailTitleEditText;
-        EditText bookDetailAuthorEditText;
-        TextView editReadStateTextView;
-        Switch editReadStateSwitch;
-        ImageButton star1Button, star2Button, star3Button, star4Button, star5Button;
-        // Info container
-        Button informationButton;
-        ImageView informationArrow;
-        ImageButton editInformationContent;
-        RelativeLayout informationContentLayout;
-        TextView categoryTextView;
-        EditText categoryEditText;
-        TextView pagesTextView;
-        EditText pagesEditText;
-        TextView loanTextView;
-        EditText loanEditText;
-        // Description container
-        Button descriptionButton;
-        ImageView descriptionArrow;
-        ImageButton editDescriptionContent;
-        RelativeLayout descriptionContentLayout;
-        TextView descriptionTextView;
-        EditText descriptionEditText;
-        // Comment container
-        Button commentButton;
-        ImageView commentArrow;
-        ImageButton editCommentContent;
-        RelativeLayout commentContentLayout;
-        TextView commentTextView;
-        EditText commentEditText;
+    // Top container
+    ImageView bookDetailImage;
+    TextView bookDetailTitle;
+    TextView bookDetailAuthor;
+    TextView bookDetailReadDate;
+    ImageView star1, star2, star3, star4, star5;
+    ImageButton editPrimaryInfoButton;
+    // Edit Top container
+    LinearLayout editTopContainerLayout;
+    EditText bookDetailTitleEditText;
+    EditText bookDetailAuthorEditText;
+    TextView editReadStateTextView;
+    Switch editReadStateSwitch;
+    ImageButton star1Button, star2Button, star3Button, star4Button, star5Button;
+    // Info container
+    Button informationButton;
+    ImageView informationArrow;
+    ImageButton editInformationContent;
+    RelativeLayout informationContentLayout;
+    TextView categoryTextView;
+    EditText categoryEditText;
+    TextView pagesTextView;
+    EditText pagesEditText;
+    TextView loanTextView;
+    EditText loanEditText;
+    // Description container
+    Button descriptionButton;
+    ImageView descriptionArrow;
+    ImageButton editDescriptionContent;
+    RelativeLayout descriptionContentLayout;
+    TextView descriptionTextView;
+    EditText descriptionEditText;
+    // Comment container
+    Button commentButton;
+    ImageView commentArrow;
+    ImageButton editCommentContent;
+    RelativeLayout commentContentLayout;
+    TextView commentTextView;
+    EditText commentEditText;
     // Data Vars
     int numberOfEditableOpen;
     Book oldBook;
     Book book;
     BookViewModel viewModel;
+    private int numberOfStars;
 
 
     @Override
@@ -161,7 +159,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         }
         bookDetailReadDate.setText(readDate);
 
-        int numberOfStars = book.getMark();
+        numberOfStars = book.getMark();
         setupMarkStarsDrawable(numberOfStars);
     }
 
@@ -184,7 +182,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     private void setupBookComments() {
         commentButton.setOnClickListener(this);
         String commentString = (book.getComment() != null) ? book.getComment() : getResources().getString(R.string.not_specified);
-        categoryTextView.setText(commentString);
+        commentTextView.setText(commentString);
     }
 
 
@@ -367,7 +365,8 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void onClickStarButton(View view) {
-        int numberOfStars = Integer.parseInt(view.getTag().toString());
+        numberOfStars = Integer.parseInt(view.getTag().toString());
+        book.setMark(numberOfStars);
         setupMarkStarsDrawable(numberOfStars);
     }
 
@@ -479,7 +478,8 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         }
         bookDetailReadDate.setText(editReadStateTextView.getText());
         if (editReadStateTextView.getText() != getResources().getString(R.string.not_read_state))
-            book.setReadTimestamp(editReadStateTextView.getText().toString());
+            book.setHasBeenRead(true);
+        book.setReadTimestamp(editReadStateTextView.getText().toString());
     }
     private void animateEditLayoutScale(boolean editStateIsOpen, float fromX, float toX, float fromY, float toY) {
         ScaleAnimation scaleAnimation = new ScaleAnimation(

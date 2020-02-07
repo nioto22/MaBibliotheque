@@ -331,7 +331,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true">
+                        android:layout_alignParentStart="true"
+                        android:layout_toStartOf="@+id/editInformationContent">
                         <TextView
                             android:id="@+id/categoryTitleTv"
                             android:layout_width="wrap_content"
@@ -596,6 +597,7 @@
                         android:layout_marginStart="@dimen/small_8dp"
                         android:layout_marginTop="@dimen/xs_4dp"
                         android:layout_marginBottom="@dimen/small_8dp"
+                        android:layout_toStartOf="@+id/editCommentContent"
                         android:background="@color/background_third_taupe"
                         android:visibility="invisible"/>
                     <ImageButton

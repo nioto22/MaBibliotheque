@@ -25,7 +25,13 @@ public class BookInfo implements Serializable {
     public String getTitle() {
         return title;
     }
-    public String getAuthor() { return authors.get(0); }
+    public String getAuthor() {
+        if(authors != null && authors.get(0) != null){
+            return authors.get(0);
+        } else {
+            return null;
+        }
+    }
     public Integer getPageCount() {  return pageCount; }
     public String getCategory() {
         if (categories == null) return null;

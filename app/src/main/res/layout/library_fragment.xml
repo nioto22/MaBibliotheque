@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.library.LibraryFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,12 +26,12 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true">
                 <TextView
+                    android:id="@+id/numberOfBooksTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="185 livres"
+                    android:text=""
                     android:textColor="@color/text_secondary_white"
-                    android:layout_margin="@dimen/small_8dp"
-                    android:paddingStart="@dimen/xs_4dp"
+                    android:layout_margin="@dimen/medium_12dp"
                     android:paddingEnd="@dimen/xs_4dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"/>
@@ -51,15 +53,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FILTRES"
+                        android:text="@string/filters"
                         android:textSize="12sp"
                         android:textColor="@color/text_secondary_white"/>
                     <TextView
                         android:id="@+id/numberOfFilterTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aucun sélectionné"
-                        android:textSize="8sp"
+                        android:text="@string/no_filter"
+                        android:textSize="@dimen/text_size_8sp"
                         android:textColor="@color/text_secondary_white"/>
                 </LinearLayout>
                 <LinearLayout
@@ -80,15 +82,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TRI"
-                        android:textSize="12sp"
+                        android:text="@string/sorting"
+                        android:textSize="@dimen/text_size_12sp"
                         android:textColor="@color/text_secondary_white"/>
                     <TextView
                         android:id="@+id/sortTypeTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Titre(A-Z)"
-                        android:textSize="8sp"
+                        android:text="@string/default_sort"
+                        android:textSize="@dimen/text_size_8sp"
                         android:textColor="@color/text_secondary_white"/>
                 </LinearLayout>
 
@@ -119,10 +121,272 @@
             android:layout_weight="88"
             android:background="@color/background_secondary_grey">
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/libraryRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/medium_12dp"/>
+                android:padding="@dimen/small_8dp"/>
         </RelativeLayout>
+    </LinearLayout>
+    <View
+        android:id="@+id/filterGestureListener"
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:focusable="true"
+        android:clickable="true"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:gravity="end">
+        <Button
+            android:id="@+id/closeFilterListener"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:background="@android:color/transparent"
+            android:translationZ="@dimen/normal_10dp"
+            android:visibility="gone"/>
+        <RelativeLayout
+            android:id="@+id/filterLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="75"
+            android:background="@color/white"
+            android:translationZ="@dimen/normal_10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/small_8dp"
+            android:visibility="invisible">
+            <TextView
+                android:id="@+id/filterLayoutTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/filters"
+                android:textSize="22sp"
+                android:textColor="@color/text_primary_black"
+                android:layout_marginTop="@dimen/large_20dp"
+                android:layout_marginBottom="@dimen/large_20dp"
+                />
+            <RelativeLayout
+                android:id="@+id/filterLayoutViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterLayoutTitle"
+                android:layout_marginTop="@dimen/large_20dp">
+                <TextView
+                    android:id="@+id/filterLayoutViewTitleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="Vues"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/filterLayoutViewTitleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/filterLayoutViewTitleTitle"
+                    android:text="Icones moyennes"
+                    android:textSize="@dimen/text_size_12sp"/>
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignBottom="@+id/filterLayoutViewTitleInfo"
+                    android:layout_toEndOf="@+id/filterLayoutViewTitleInfo"
+                    android:layout_marginStart="@dimen/xl_40dp">
+
+                    <ImageView
+                        android:id="@+id/viewFilterListButton"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_view_list_turquoise"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/viewFilterSmallButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <ImageView
+                        android:id="@+id/viewFilterSmallButton"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_view_small_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/viewFilterMediumButton"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/viewFilterListButton"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                    <ImageView
+                        android:id="@+id/viewFilterMediumButton"
+                        android:layout_width="24dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_view_medium_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/viewFilterSmallButton"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:focusable="true"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/filterLayoutCategoryLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterLayoutViewLayout"
+                android:layout_marginTop="@dimen/large_20dp">
+                <TextView
+                    android:id="@+id/filterLayoutCategoryTitleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/category"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/filterLayoutCategoryTitleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/filterLayoutCategoryTitleTitle"
+                    android:text="@string/all"
+                    android:textSize="@dimen/text_size_12sp"/>
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/filterLayoutCategorySpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignEnd="@+id/filterLayoutCategoryTitleTitle"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/filterLayoutReadLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterLayoutCategoryLayout"
+                android:layout_marginTop="@dimen/large_20dp">
+                <TextView
+                    android:id="@+id/filterLayoutReadTitleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/read_state"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/filterLayoutReadTitleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/filterLayoutReadTitleTitle"
+                    android:text="@string/all"
+                    android:textSize="@dimen/text_size_12sp"/>
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/filterLayoutReadSpinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignEnd="@+id/filterLayoutReadTitleTitle"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/filterLayoutMarkLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/filterLayoutReadLayout"
+                android:layout_marginTop="@dimen/large_20dp">
+                <TextView
+                    android:id="@+id/filterLayoutMarkTitleTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/mark"
+                    android:textSize="16sp"/>
+                <TextView
+                    android:id="@+id/filterLayoutMarkTitleInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/filterLayoutMarkTitleTitle"
+                    android:text="@string/all_female"
+                    android:textSize="@dimen/text_size_12sp"/>
+                <LinearLayout
+                    android:id="@+id/filterLayoutStarsLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/small_8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignEnd="@+id/filterLayoutMarkTitleInfo">
+                    <ImageButton
+                        android:id="@+id/filterStar1Button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/small_8dp"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/xs_4dp"
+                        android:src="@drawable/ic_full_star"
+                        android:tag="1"/>
+
+                    <ImageButton
+                        android:id="@+id/filterStar2Button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/small_8dp"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/xs_4dp"
+                        android:src="@drawable/ic_full_star"
+                        android:tag="2"/>
+
+                    <ImageButton
+                        android:id="@+id/filterStar3Button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/small_8dp"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/xs_4dp"
+                        android:src="@drawable/ic_full_star"
+                        android:tag="3"/>
+
+                    <ImageButton
+                        android:id="@+id/filterStar4Button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/small_8dp"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/xs_4dp"
+                        android:src="@drawable/ic_full_star"
+                        android:tag="4"/>
+
+                    <ImageButton
+                        android:id="@+id/filterStar5Button"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginEnd="@dimen/small_8dp"
+                        android:background="@android:color/transparent"
+                        android:padding="@dimen/xs_4dp"
+                        android:src="@drawable/ic_empty_star"
+                        android:tag="5"/>
+                </LinearLayout>
+            </RelativeLayout>
+        </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

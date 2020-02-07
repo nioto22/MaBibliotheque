@@ -2,7 +2,6 @@ package com.aprouxdev.mabibliotheque.ui.main.addBook;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.widget.ImageButton;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
+import com.aprouxdev.mabibliotheque.ui.adapter.BookAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
 import com.aprouxdev.mabibliotheque.ui.camera.SimpleCaptureActivity;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -28,13 +28,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_OK;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 import static com.uber.autodispose.AutoDispose.autoDisposable;
 
 public class AddBookFragment extends Fragment implements View.OnClickListener{
     private static final String TAG = "AddBookFragment";
 
     public static final int SIMPLE_CAPTURE_REQUEST_CODE = 220;
-    public static final String BUNDLE_EXTRA_BOOK = "BUNDLE_EXTRA_BOOK";
 
     private AddBookViewModel viewModel;
     private BookAdapter booksAdapter;
@@ -94,7 +94,6 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onItemClick(int position) {
                 Book selectedBook = booksAdapter.getBook(position);
-                Log.d(TAG, "onItemClick: ");
                 Log.d(TAG, "onItemClick: " + selectedBook.getTitle());
                 Intent intent = new Intent(getContext(), BookDetailActivity.class);
                 intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);

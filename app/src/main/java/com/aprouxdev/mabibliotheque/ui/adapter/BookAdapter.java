@@ -1,36 +1,32 @@
-package com.aprouxdev.mabibliotheque.ui.main.addBook;
+package com.aprouxdev.mabibliotheque.ui.adapter;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.squareup.picasso.Picasso;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import retrofit2.http.Path;
-import retrofit2.http.Url;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
     private List<Book> books = new ArrayList<>();
     private OnItemClickListener mListener;
 
-    //public Picasso picasso;
+
 
     public BookAdapter() { }
     public BookAdapter(List<Book> books) {
         this.books = books;
-        //this.picasso = Picasso.get();
+
     }
 
     @NonNull
@@ -82,7 +78,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         this.mListener = onItemClickListener;
     }
 
-    Book getBook(int id) {
+    public Book getBook(int id) {
         return books.get(id);
     }
 
@@ -92,7 +88,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
        public BookViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
            super(itemView);
-           bookImage = itemView.findViewById(R.id.book_front_cover);
+           bookImage = itemView.findViewById(R.id.itemBookFrontCover);
 
            itemView.setOnClickListener(new View.OnClickListener() {
                @Override

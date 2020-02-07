@@ -57,5 +57,12 @@
     <string name="loan_to">Prété à :</string>
     <string name="blank" />
     <string name="by">de</string>
+    <string name="filters">FILTRES</string>
+    <string name="no_filter">Aucun sélectionné</string>
+    <string name="sorting">TRI</string>
+    <string name="default_sort">Titre(A-Z)</string>
+    <string name="all">Tous</string>
+    <string name="all_female">Toutes</string>
+    <string name="mark">Note</string>
 
 </resources>
