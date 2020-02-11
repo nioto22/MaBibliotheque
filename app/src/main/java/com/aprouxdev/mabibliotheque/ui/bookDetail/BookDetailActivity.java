@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +41,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_IS_NEW_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.months;
 
 public class BookDetailActivity extends AppCompatActivity implements View.OnClickListener{
@@ -85,11 +88,13 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     TextView commentTextView;
     EditText commentEditText;
     // Data Vars
-    int numberOfEditableOpen;
-    Book oldBook;
-    Book book;
-    BookViewModel viewModel;
+    private int numberOfEditableOpen;
+    private Book oldBook;
+    private Book book;
+    private BookViewModel viewModel;
     private int numberOfStars;
+    private boolean isANewBook;
+
 
 
     @Override
@@ -97,14 +102,23 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
 
+        oldBook = getCurrentBook();
+        try {
+            book = (Book) oldBook.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+
         setupViews();
         setupActionBar();
-        oldBook = getCurrentBook();
-        book = oldBook;
-        viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+        isItANewBook();
 
         setupData();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,8 +136,23 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         Toast.makeText(this, "Livre sauvegardé", Toast.LENGTH_SHORT).show();
     }
 
-    private boolean hasBookChanged(){
-        return !book.equals(oldBook);
+    private boolean bookHasCHanged(){
+           return !book.getTitle().equals(oldBook.getTitle())
+                   || !Objects.equals(book.getAuthor(), oldBook.getAuthor())
+                   || !Objects.equals(book.getDescription(), oldBook.getDescription())
+                   || !Objects.equals(book.getCategory(), oldBook.getCategory())
+                   || !Objects.equals(book.getReadTimestamp(), oldBook.getReadTimestamp())
+                   || !Objects.equals(book.getComment(), oldBook.getComment())
+                   || !Objects.equals(book.getLoan(), oldBook.getLoan())
+                   || book.getPageCount() != oldBook.getPageCount()
+                   || book.getMark() != oldBook.getMark();
+    }
+
+    private void isItANewBook() {
+        Intent intent = getIntent();
+        if (null != intent) {
+            if (intent.hasExtra(BUNDLE_EXTRA_IS_NEW_BOOK)) isANewBook = intent.getBooleanExtra(BUNDLE_EXTRA_IS_NEW_BOOK, false);
+        }
     }
 
     // --------------------
@@ -281,7 +310,9 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == android.R.id.home){
-            showAlertDialogBackPressed();
+            // back pressed save only new Book or any Change
+            if (isANewBook || bookHasCHanged()) showAlertDialogBackPressed();
+            else onBackPressed();
             return true;
         } else if (item.getItemId() == R.id.action_save){
             if (numberOfEditableOpen > 0 ) {
@@ -301,8 +332,11 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showAlertDialogBackPressed() {
-        String alertTitle = (hasBookChanged()) ? "Sauver les modifications ?" : "Sauvegarder le livre ?";
-        String alertMessage = String.format("Voulez-vous enregistrer %s dans votre bibliothèque", book.getTitle());
+        String alertTitle = (isANewBook) ? "Sauvegarder le livre ?" : "Sauver les modifications ?";
+        String alertMessage = (isANewBook) ?
+                String.format("Voulez-vous enregistrer %s dans votre bibliothèque", book.getTitle())
+                : String.format("Voulez-vous enregistrer les modifications apportées à %s", book.getTitle());
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(alertTitle)
                 .setMessage(alertMessage)
@@ -371,6 +405,8 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setupSwitchListener() {
+        if (book.getHasBeenRead() != null) editReadStateSwitch.setChecked(book.getHasBeenRead());
+        else  editReadStateSwitch.setChecked(false);
         editReadStateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -465,6 +501,9 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         if (bookDetailAuthor.getText() != null){
             bookDetailAuthorEditText.setText(bookDetailAuthor.getText());
         }
+        if (bookDetailReadDate.getText() != getResources().getString(R.string.not_read_state)) {
+            editReadStateTextView.setText(bookDetailReadDate.getText().toString());
+        }
     }
 
     private void updateTopContainerTextViewsText() {
@@ -477,8 +516,8 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             book.setAuthor(bookDetailAuthorEditText.getText().toString());
         }
         bookDetailReadDate.setText(editReadStateTextView.getText());
-        if (editReadStateTextView.getText() != getResources().getString(R.string.not_read_state))
-            book.setHasBeenRead(true);
+        if (editReadStateTextView.getText() != getResources().getString(R.string.not_read_state)) book.setHasBeenRead(true);
+        else book.setHasBeenRead(false);
         book.setReadTimestamp(editReadStateTextView.getText().toString());
     }
     private void animateEditLayoutScale(boolean editStateIsOpen, float fromX, float toX, float fromY, float toY) {

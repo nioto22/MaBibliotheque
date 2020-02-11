@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static android.app.Activity.RESULT_OK;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_IS_NEW_BOOK;
 import static com.uber.autodispose.AutoDispose.autoDisposable;
 
 public class AddBookFragment extends Fragment implements View.OnClickListener{
@@ -97,6 +98,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
                 Log.d(TAG, "onItemClick: " + selectedBook.getTitle());
                 Intent intent = new Intent(getContext(), BookDetailActivity.class);
                 intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
+                intent.putExtra(BUNDLE_EXTRA_IS_NEW_BOOK, true);
                 startActivity(intent);
             }
         });

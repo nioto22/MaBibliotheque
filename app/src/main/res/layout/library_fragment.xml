@@ -7,6 +7,7 @@
     tools:context=".ui.main.library.LibraryFragment">
 
     <LinearLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -200,8 +201,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignBottom="@+id/filterLayoutViewTitleInfo"
-                    android:layout_toEndOf="@+id/filterLayoutViewTitleInfo"
-                    android:layout_marginStart="@dimen/xl_40dp">
+                    android:layout_toEndOf="@+id/filterLayoutViewTitleTitle"
+                    android:layout_marginStart="60dp">
 
                     <ImageView
                         android:id="@+id/viewFilterListButton"
@@ -261,14 +262,6 @@
                     android:layout_alignParentTop="true"
                     android:text="@string/category"
                     android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/filterLayoutCategoryTitleInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/filterLayoutCategoryTitleTitle"
-                    android:text="@string/all"
-                    android:textSize="@dimen/text_size_12sp"/>
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/filterLayoutCategorySpinner"
                     android:layout_width="wrap_content"
@@ -290,14 +283,6 @@
                     android:layout_alignParentTop="true"
                     android:text="@string/read_state"
                     android:textSize="16sp"/>
-                <TextView
-                    android:id="@+id/filterLayoutReadTitleInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/filterLayoutReadTitleTitle"
-                    android:text="@string/all"
-                    android:textSize="@dimen/text_size_12sp"/>
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/filterLayoutReadSpinner"
                     android:layout_width="wrap_content"

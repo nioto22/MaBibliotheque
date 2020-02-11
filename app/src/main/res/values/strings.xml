@@ -37,6 +37,12 @@
     <string name="read_state">Lu</string>
     <string name="not_read_state">Pas encore lu</string>
 
+    <!-- ReadSpinner  -->
+    <string-array name="read_array">
+        <item>Tous</item>
+        <item>Lu</item>
+        <item>Non Lu</item>
+    </string-array>
 
     <!-- Tools -->
     <string name="month0">Jan</string>
@@ -64,5 +70,17 @@
     <string name="all">Tous</string>
     <string name="all_female">Toutes</string>
     <string name="mark">Note</string>
+    <string name="read">Lu :</string>
+    <string name="not_read">A lire :</string>
+    <string name="see_all">Tout voir</string>
+    <string name="favorite_title">Coups de coeur :</string>
+    <string name="books_title">Livres :</string>
+    <string name="to_read_title">A lire :</string>
+    <string name="last_entries_title">Dernières entrées :</string>
 
+
+    <!-- FILTERS  -->
+    <string name="list_info">Listes</string>
+    <string name="small_views_info">Icones petites</string>
+    <string name="medium_views_info">Icones moyennes</string>
 </resources>

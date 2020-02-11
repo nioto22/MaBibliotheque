@@ -1,11 +1,14 @@
 package com.aprouxdev.mabibliotheque.ui.main;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toolbar;
 
 import com.aprouxdev.mabibliotheque.R;
@@ -25,12 +28,15 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private static final String TAG = "MainActivity";
 
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    public SharedPreferences preferences;
 
 
     @Override
@@ -42,11 +48,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
 
         initNavigation();
-
+        initPreferences();
     }
 
-
-
+    private void initPreferences() {
+        preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
+    }
 
     private void initNavigation(){
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -124,6 +131,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         menuItem.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void seeAllButtonClicked(View v){
+        switch (v.getId()){
+            case (R.id.topSeeAllButton):
+            case (R.id.homeLastEntriesSeeAllButton):
+                Log.d(TAG, "seeAllButtonClicked: ");
+                    Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
+                break;
+            case (R.id.homeToReadSeeAllButton):
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
+                // TODO intent library with toRead temp filter
+                break;
+            case (R.id.homeFavoriteSeeAllButton):
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
+                // TODO intent library with favorite temp filter
+                break;
+            case (R.id.homeNoBooksAddBookButton):
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.addBookScreen);
+                break;
+            case (R.id.homeNoBooksAddLibraryButton):
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.addLibraryScreen);
+                break;
+        }
     }
 
     private boolean isValidDestination(int destination){

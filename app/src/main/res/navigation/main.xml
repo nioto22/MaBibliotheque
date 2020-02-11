@@ -10,7 +10,11 @@
         android:id="@+id/homeScreen"
         android:name="com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/home_fragment"/>
+        tools:layout="@layout/home_fragment">
+        <action
+            android:id="@+id/action_homeScreen_to_libraryScreen2"
+            app:destination="@id/libraryScreen" />
+    </fragment>
 
     <fragment
         android:id="@+id/libraryScreen"

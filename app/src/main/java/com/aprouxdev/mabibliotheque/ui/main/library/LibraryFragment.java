@@ -1,7 +1,9 @@
 package com.aprouxdev.mabibliotheque.ui.main.library;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -11,10 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.aprouxdev.mabibliotheque.R;
@@ -25,6 +30,7 @@ import com.aprouxdev.mabibliotheque.viewmodels.BookViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,12 +44,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.MEDIUM_CELL_SIZE;
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_VIEW;
 import static com.aprouxdev.mabibliotheque.util.Constants.SMALL_CELL_SIZE;
+import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.*;
 
-public class LibraryFragment extends Fragment implements View.OnClickListener {
+public class LibraryFragment extends Fragment
+        implements View.OnClickListener,
+        AdapterView.OnItemSelectedListener {
     private static final String TAG = "LibraryFragment";
     // UI Vars
-    // Top Container VIew
+    // Top Container View
     private TextView numberOfBooksTextView;
     private LinearLayout filterButton;
     private TextView numberOfFilterTextView;
@@ -58,16 +69,24 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     private ImageView viewFilterListButton;
     private ImageView viewFilterSmallButton;
     private ImageView viewFilterMediumButton;
+    private Spinner filterLayoutReadSpinner;
+    private Spinner filterLayoutCategorySpinner;
+    private TextView filterLayoutViewTitleInfo;
+
 
     // Data Vars
     private LibraryAdapter libraryAdapter;
     private BookViewModel bookViewModel;
+    private LibraryViewModel viewModel;
     private List<Book> libraryBooks;
     private List<Book> filteredBooks;
+    private List<String> categoryArray;
     private GestureDetector detector;
     private List<Integer> recyclerViewCellSize;
     private boolean isListAdapterSelected;
-
+    private SharedPreferences preferences;
+    private int numberOfFilterUsed;
+    private String firstCategory;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -83,17 +102,22 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         bookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
 
         subscribeObservers();
+
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        preferences = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        firstCategory = getResources().getString(R.string.all);
         setupViews(view);
-        setupFIlterView();
+        setupFilterViews();
         setupGestureDetector();
+
         setupData();
         setupRecyclerView();
     }
@@ -105,8 +129,10 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onChanged(List<Book> books) {
                 libraryBooks = books;
+                categoryArray = viewModel.getSpinnerCategoryArray(firstCategory, books);
                 setupNumberOfBooksTextView();
                 libraryAdapter.displayNewBooks(books);
+                setupCategorySpinnerView();
                 Log.d(TAG, "onChanged: " + books.toString());
             }
         });
@@ -139,13 +165,57 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         viewFilterSmallButton.setOnClickListener(this::viewFilterButtonClicked);
         viewFilterMediumButton = view.findViewById(R.id.viewFilterMediumButton);
         viewFilterMediumButton.setOnClickListener(this::viewFilterButtonClicked);
+        filterLayoutReadSpinner = view.findViewById(R.id.filterLayoutReadSpinner);
+        filterLayoutReadSpinner.setOnItemSelectedListener(this);
+        filterLayoutCategorySpinner = view.findViewById(R.id.filterLayoutCategorySpinner);
+        filterLayoutCategorySpinner.setOnItemSelectedListener(this);
+        filterLayoutViewTitleInfo = view.findViewById(R.id.filterLayoutViewTitleInfo);
+
     }
 
-    private void setupFIlterView() {
-        // TODO change views drawable
+    private void setupFilterViews() {
+        setupViewsFilterView();
+        setupReadFilterSpinnerView();
+
+
     }
+
+    private void setupCategorySpinnerView() {
+
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), R.layout.custom_spinner_simple_item,
+                categoryArray);
+        categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        filterLayoutCategorySpinner.setAdapter(categoryAdapter);
+    }
+
+    private void setupReadFilterSpinnerView() {
+        ArrayAdapter<CharSequence> readAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.read_array, R.layout.custom_spinner_simple_item);
+        // Specify the layout to use when the list of choices appears
+        readAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        filterLayoutReadSpinner.setAdapter(readAdapter);
+    }
+
+    private void setupViewsFilterView() {
+        allViewsFilterButtonInGray();
+        // Setup views drawable
+        String views = preferences.getString(SHARED_PREF_VIEW, LIST.name());
+        switch (views){
+            case "SMALL":
+                setupFilterSmallView();
+                break;
+            case "MEDIUM":
+                setupFilterMediumView();
+                break;
+            case "LIST":
+            default:
+                setupFilterListView();
+                break;
+        }
+    }
+
     private void setupRecyclerView() {
-
         if (isListAdapterSelected){
             final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             libraryRecyclerView.setLayoutManager(linearLayoutManager);
@@ -202,7 +272,8 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setupNumberOfBooksTextView() {
-        String numberOfBooks = "" + libraryBooks.size() + " livres";
+        String bookPural = libraryBooks.size() > 1 ? " livres" : " livre";
+        String numberOfBooks = "" + libraryBooks.size() + bookPural;
         numberOfBooksTextView.setText(numberOfBooks);
     }
 
@@ -247,24 +318,60 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         allViewsFilterButtonInGray();
         switch (v.getId()){
             case (R.id.viewFilterListButton):
-                viewFilterListButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_list_turquoise));
-                recyclerViewCellSize = null;
-                isListAdapterSelected = true;
-                setupRecyclerView();
+                setupFilterListView();
                 break;
             case (R.id.viewFilterSmallButton):
-                viewFilterSmallButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_small_turquoise));
-                recyclerViewCellSize = SMALL_CELL_SIZE;
-                isListAdapterSelected = false;
-                setupRecyclerView();
+                setupFilterSmallView();
                 break;
             case (R.id.viewFilterMediumButton):
-                viewFilterMediumButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_medium_turquoise));
-                recyclerViewCellSize = MEDIUM_CELL_SIZE;
-                isListAdapterSelected = false;
-                setupRecyclerView();
+                setupFilterMediumView();
                 break;
         }
+    }
+
+    // Read Spinner Listener
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getId()){
+            case (R.id.filterLayoutCategorySpinner):
+                //TODO update data
+                //TODO add filter int if not all
+                break;
+            case (R.id.filterLayoutReadSpinner):
+                //TODO update data
+                //TODO add filter int if not all
+                break;
+        }
+    }
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+
+    private void setupFilterListView() {
+        viewFilterListButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_list_turquoise));
+        recyclerViewCellSize = null;
+        isListAdapterSelected = true;
+        preferences.edit().putString(SHARED_PREF_VIEW, LIST.name()).apply();
+        filterLayoutViewTitleInfo.setText(getResources().getString(R.string.list_info));
+        setupRecyclerView();
+    }
+    private void setupFilterSmallView() {
+        viewFilterSmallButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_small_turquoise));
+        recyclerViewCellSize = SMALL_CELL_SIZE;
+        isListAdapterSelected = false;
+        preferences.edit().putString(SHARED_PREF_VIEW, SMALL.name()).apply();
+        filterLayoutViewTitleInfo.setText(getResources().getString(R.string.small_views_info));
+        setupRecyclerView();
+    }
+    private void setupFilterMediumView() {
+        viewFilterMediumButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_view_medium_turquoise));
+        recyclerViewCellSize = MEDIUM_CELL_SIZE;
+        isListAdapterSelected = false;
+        preferences.edit().putString(SHARED_PREF_VIEW, MEDIUM.name()).apply();
+        filterLayoutViewTitleInfo.setText(getResources().getString(R.string.medium_views_info));
+        setupRecyclerView();
     }
 
     private void allViewsFilterButtonInGray() {
@@ -280,15 +387,15 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         float toX = isFilterOpen ? 0f : filterLayout.getScaleX();
         float toY = fromY;
         animateFilterLayout(isFilterOpen, fromX, toX, fromY, toY);
-
     }
+
 
     private void animateFilterLayout(boolean isFilterOpen, float fromX, float toX, float fromY, float toY) {
         ScaleAnimation scaleAnimation = new ScaleAnimation(
                 fromX, toX, fromY, toY,
                 Animation.RELATIVE_TO_SELF, 1f,
                 Animation.RELATIVE_TO_SELF, 1f);
-        scaleAnimation.setDuration(500);
+        scaleAnimation.setDuration(400);
         scaleAnimation.setInterpolator(new LinearOutSlowInInterpolator());
         scaleAnimation.setRepeatCount(0);
         scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -313,6 +420,7 @@ public class LibraryFragment extends Fragment implements View.OnClickListener {
         });
         filterLayout.startAnimation(scaleAnimation);
     }
+
 
 
     class FilterMenuGestureListener extends GestureDetector.SimpleOnGestureListener {

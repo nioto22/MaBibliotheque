@@ -13,7 +13,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = MetaData.bookTableName)
-public class Book implements Serializable {
+public class Book implements Serializable, Cloneable {
     @PrimaryKey
     @NonNull
     private String id;
@@ -83,4 +83,9 @@ public class Book implements Serializable {
     public void setSaveTimestamp(String saveTimestamp) { this.saveTimestamp = saveTimestamp; }
     public void setReadTimestamp(String readTimestamp) { this.readTimestamp = readTimestamp; }
 
+    // Methods
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

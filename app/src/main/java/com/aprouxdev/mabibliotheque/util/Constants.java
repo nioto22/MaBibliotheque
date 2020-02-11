@@ -14,10 +14,22 @@ public class Constants {
             R.string.month2, R.string.month3, R.string.month4, R.string.month5, R.string.month6,
             R.string.month7, R.string.month8, R.string.month9, R.string.month10, R.string.month11);
 
-
+    // BUNDLE
     public static final String BUNDLE_EXTRA_BOOK = "BUNDLE_EXTRA_BOOK";
+    public static final String BUNDLE_EXTRA_IS_NEW_BOOK = "BUNDLE_EXTRA_IS_NEW_BOOK";
+
+    // Library data
     public static final List<Integer> SMALL_CELL_SIZE = Arrays.asList(4, 4);
     public static final List<Integer> MEDIUM_CELL_SIZE = Arrays.asList(3, 3);
+
+    // Shared Preference
+    public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
+    public static final String SHARED_PREF_VIEW = "SHARED_PREF_VIEW";
+    public static enum VIEWS_PREF {
+        LIST,
+        SMALL,
+        MEDIUM;
+    }
 }
 
 
