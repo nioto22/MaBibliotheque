@@ -5,13 +5,14 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
-import com.aprouxdev.mabibliotheque.ui.main.library.LibraryFragment;
-import com.aprouxdev.mabibliotheque.util.Constants;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,9 +24,15 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookViewHolder> {
+    private static final String TAG = "LibraryAdapter";
 
     private List<Book> books = new ArrayList<>();
     private OnItemClickListener mListener;
+
+    public static final String SHARE_BUTTON_CLICKED = "SHARE_BUTTON_CLICKED";
+    public static final String DELETE_BUTTON_CLICKED = "DELETE_BUTTON_CLICKED";
+
+    private OnItemLongClickListener longClickListener;
     private int height;
     private int width;
     private List<Integer> cell_size;
@@ -56,7 +63,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
             width = parent.getMeasuredWidth() / cell_size.get(0);
             height = parent.getMeasuredHeight() / cell_size.get(1);
         }
-        return new BookViewHolder(itemView, mListener);
+        return new BookViewHolder(itemView, mListener, longClickListener);
     }
 
     @Override
@@ -124,9 +131,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
     }
 
     public interface OnItemClickListener { void onItemClick(int position);  }
-
+    public interface OnItemLongClickListener { void onItemLongClick(String click, int position);}
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
+    }
+    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener){
+        this.longClickListener = onItemLongClickListener;
     }
 
     public Book getBook(int id) {
@@ -141,10 +151,19 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
         private TextView listItemBookRead;
         private ImageView listItemStar1, listItemStar2, listItemStar3, listItemStar4, listItemStar5;
 
-        public BookViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+
+        private LinearLayout itemLongClickRootLayout;
+        private ImageButton shareButton;
+        private ImageButton deleteButton;
+        private View cancelButton;
+
+        public BookViewHolder(@NonNull View itemView,
+                              final OnItemClickListener listener,
+                              final OnItemLongClickListener longClickListener) {
             super(itemView);
             int bookImageResource = isListViewAdaptor ? R.id.listItemBookFrontCover : R.id.itemBookFrontCover;
             bookImage = itemView.findViewById(bookImageResource);
+
             if (isListViewAdaptor){
                 listItemBookTitle = itemView.findViewById(R.id.listItemBookTitle);
                 listItemBookAuthor = itemView.findViewById(R.id.listItemBookAuthor);
@@ -154,6 +173,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
                 listItemStar3 = itemView.findViewById(R.id.listItemStar3);
                 listItemStar4 = itemView.findViewById(R.id.listItemStar4);
                 listItemStar5 = itemView.findViewById(R.id.listItemStar5);
+                // TODO implement long click in list item xml
+            } else {
+                itemLongClickRootLayout = itemView.findViewById(R.id.itemLongClickRootLayout);
+                shareButton = itemView.findViewById(R.id.itemLongClickImageButtonShare);
+                deleteButton = itemView.findViewById(R.id.itemLongClickImageButtonDelete);
+                cancelButton = itemView.findViewById(R.id.itemLongClickTopView);
             }
 
 
@@ -166,6 +191,39 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
                             listener.onItemClick(position);
                         }
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (longClickListener != null){
+                        itemLongClickRootLayout.setVisibility(View.VISIBLE);
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            shareButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    longClickListener.onItemLongClick(SHARE_BUTTON_CLICKED, position);
+                                    itemLongClickRootLayout.setVisibility(View.GONE);
+                                }
+                            });
+                            deleteButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    longClickListener.onItemLongClick(DELETE_BUTTON_CLICKED, position);
+                                    itemLongClickRootLayout.setVisibility(View.GONE);
+                                }
+                            });
+                            cancelButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    itemLongClickRootLayout.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    }
+                    return true;
                 }
             });
         }

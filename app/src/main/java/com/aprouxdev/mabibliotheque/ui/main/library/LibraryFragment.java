@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
@@ -42,6 +43,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.DELETE_BUTTON_CLICKED;
+import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.SHARE_BUTTON_CLICKED;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.MEDIUM_CELL_SIZE;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
@@ -51,7 +54,7 @@ import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.*;
 
 public class LibraryFragment extends Fragment
         implements View.OnClickListener,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener{
     private static final String TAG = "LibraryFragment";
     // UI Vars
     // Top Container View
@@ -72,6 +75,7 @@ public class LibraryFragment extends Fragment
     private Spinner filterLayoutReadSpinner;
     private Spinner filterLayoutCategorySpinner;
     private TextView filterLayoutViewTitleInfo;
+    private Spinner filterLayoutMarkSpinner;
 
 
     // Data Vars
@@ -170,18 +174,23 @@ public class LibraryFragment extends Fragment
         filterLayoutCategorySpinner = view.findViewById(R.id.filterLayoutCategorySpinner);
         filterLayoutCategorySpinner.setOnItemSelectedListener(this);
         filterLayoutViewTitleInfo = view.findViewById(R.id.filterLayoutViewTitleInfo);
+        filterLayoutMarkSpinner = view.findViewById(R.id.filterLayoutMarkSpinner);
+        filterLayoutMarkSpinner.setOnItemSelectedListener(this);
 
     }
 
     private void setupFilterViews() {
         setupViewsFilterView();
         setupReadFilterSpinnerView();
-
+        setupMarkFilterSpinnerView();
+        // setupCategorySpinnerView in onChanged of observer
 
     }
 
-    private void setupCategorySpinnerView() {
 
+
+    private void setupCategorySpinnerView() {
+        // setupCategorySpinnerView call in onChanged of observer
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), R.layout.custom_spinner_simple_item,
                 categoryArray);
         categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
@@ -189,12 +198,19 @@ public class LibraryFragment extends Fragment
     }
 
     private void setupReadFilterSpinnerView() {
-        ArrayAdapter<CharSequence> readAdapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> readAdapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),
                 R.array.read_array, R.layout.custom_spinner_simple_item);
         // Specify the layout to use when the list of choices appears
         readAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
 // Apply the adapter to the spinner
         filterLayoutReadSpinner.setAdapter(readAdapter);
+    }
+
+    private void setupMarkFilterSpinnerView() {
+        ArrayAdapter<CharSequence> markAdapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),
+                R.array.mark_array, R.layout.custom_mark_spinner_simple_item);
+        markAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        filterLayoutMarkSpinner.setAdapter(markAdapter);
     }
 
     private void setupViewsFilterView() {
@@ -234,6 +250,17 @@ public class LibraryFragment extends Fragment
                 Intent intent = new Intent(getContext(), BookDetailActivity.class);
                 intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
                 startActivity(intent);
+            }
+        });
+        libraryAdapter.setOnItemLongClickListener(new LibraryAdapter.OnItemLongClickListener() {
+            @Override
+            public void onItemLongClick(String click, int position) {
+                Book selectedBook = libraryAdapter.getBook(position);
+                if (click == SHARE_BUTTON_CLICKED){
+                    Toast.makeText(getContext(), "Share button clicked for " + selectedBook.getTitle(), Toast.LENGTH_SHORT).show();
+                } else if (click.equals(DELETE_BUTTON_CLICKED)){
+                    Toast.makeText(getContext(), "Delete button clicked for " + selectedBook.getTitle(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -341,6 +368,10 @@ public class LibraryFragment extends Fragment
                 //TODO update data
                 //TODO add filter int if not all
                 break;
+            case (R.id.filterLayoutMarkSpinner):
+                //TODO update data
+                //TODO add filter int if not all
+                break;
         }
     }
     @Override
@@ -420,7 +451,6 @@ public class LibraryFragment extends Fragment
         });
         filterLayout.startAnimation(scaleAnimation);
     }
-
 
 
     class FilterMenuGestureListener extends GestureDetector.SimpleOnGestureListener {

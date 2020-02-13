@@ -43,6 +43,15 @@
         <item>Lu</item>
         <item>Non Lu</item>
     </string-array>
+    <!-- MarkSpinner  -->
+    <string-array name="mark_array">
+        <item>Toutes</item>
+        <item>1 étoile et +</item>
+        <item>2 étoiles et +</item>
+        <item>3 étoiles et +</item>
+        <item>4 étoiles et +</item>
+        <item>5 étoiles</item>
+    </string-array>
 
     <!-- Tools -->
     <string name="month0">Jan</string>

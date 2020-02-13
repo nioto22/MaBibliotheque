@@ -1,10 +1,13 @@
 package com.aprouxdev.mabibliotheque.ui.adapter;
 
+import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
@@ -73,10 +76,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     public interface OnItemClickListener { void onItemClick(int position);  }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
+
 
     public Book getBook(int id) {
         return books.get(id);
@@ -86,9 +89,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
    class BookViewHolder extends RecyclerView.ViewHolder {
         private ImageView bookImage;
 
-       public BookViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
+       public BookViewHolder(@NonNull View itemView,
+                             final OnItemClickListener listener) {
            super(itemView);
            bookImage = itemView.findViewById(R.id.itemBookFrontCover);
+
 
            itemView.setOnClickListener(new View.OnClickListener() {
                @Override
@@ -101,6 +106,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                    }
                }
            });
+
        }
 
 

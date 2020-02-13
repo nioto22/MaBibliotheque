@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/xs_4dp">
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/itemCardView"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,4 +29,62 @@
                 android:contentDescription="@string/book_front_cover"/>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:id="@+id/itemLongClickRootLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/itemCardView"
+        android:layout_alignBottom="@+id/itemCardView"
+        android:layout_alignStart="@+id/itemCardView"
+        android:layout_alignEnd="@+id/itemCardView"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:weightSum="100"
+        android:translationZ="@dimen/medium_12dp"
+        android:alpha="0.88"
+        android:padding="@dimen/xs_4dp">
+        <View
+            android:id="@+id/itemLongClickTopView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60"
+            android:focusable="true"
+            android:clickable="true"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:background="@color/white">
+
+            <ImageButton
+                android:id="@+id/itemLongClickImageButtonShare"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/background_secondary_grey"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_share"
+                android:layout_margin="@dimen/thin_2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/itemLongClickImageButtonDelete"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/itemLongClickImageButtonDelete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/background_secondary_grey"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_delete"
+                android:layout_margin="@dimen/thin_2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemLongClickImageButtonShare"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 </RelativeLayout>
