@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.ui.camera;
+package com.aprouxdev.mabibliotheque.ui.addCapturedBook;
 
 import androidx.lifecycle.ViewModel;
 

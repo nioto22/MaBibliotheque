@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.ui.camera;
+package com.aprouxdev.mabibliotheque.ui.addCapturedLibrary;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,13 +11,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
@@ -28,12 +36,11 @@ import com.aprouxdev.mabibliotheque.tools.ocr.OcrDetectorProcessor;
 import com.aprouxdev.mabibliotheque.tools.ocr.OcrGraphic;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -41,9 +48,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProviders;
 
-public class SimpleCaptureActivity extends AppCompatActivity {
+public class AddLibraryActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String TAG = "AddLibraryActivity";
 
-    private static final String TAG = "SimpleCaptureActivity";
 
     // Intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
@@ -51,55 +58,56 @@ public class SimpleCaptureActivity extends AppCompatActivity {
     // Permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
 
-    // Constants used to pass extra data in different intents
-    // Permission Intent
+    // Constants used to pass extra data in the intent
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
-    // Set result to AddBook intent
-    public static final String BUNDLE_EXTRA_TEXT = "BUNDLE_EXTRA_TEXT";
+    public static final String TextBlockObject = "String";
+    // Constants used for orientation control
+    private static final int LANDSCAPE = 1;
+    private static final int PORTRAIT = 0;
+    private static final int OUT = -1;
 
-    // Helper objects for detecting taps and pinches.
-    private ScaleGestureDetector scaleGestureDetector;
-    private GestureDetector gestureDetector;
+    // UI Vars
+    private TextView tvInstructionText;
+    private CameraSourcePreview cameraPreview;
+    private GraphicOverlay graphicOverlay;
+    private TextView tvCountDown;
+    private RelativeLayout orientationLayout;
+    private ImageButton captureButton;
+    private Button finishButton;
 
-    // UI Variables
+    // DATA VARS
     private CameraSource cameraSource;
-    private CameraSourcePreview preview;
-    private GraphicOverlay<OcrGraphic> graphicOverlay;
+    private ScaleGestureDetector scaleGestureDetector;
+    private TextRecognizer textRecognizer;
+    private AddLibraryViewModel viewModel;
 
-    // Camera Variables
-    boolean autoFocus;
-    boolean useFlash;
-
-    // Data Variables
-    SimpleCaptureViewModel viewModel;
-    ArrayList<String> textArray = new ArrayList<>();
-    TextRecognizer textRecognizer;
-    StringBuilder capturedText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_simple_capture);
+        setContentView(R.layout.activity_add_library);
+        Log.d(TAG, "onCreate: ");
 
-
-
-        preview = findViewById(R.id.cameraPreview);
-        graphicOverlay = findViewById(R.id.graphicOverlay);
-
-        viewModel = ViewModelProviders.of(this).get(SimpleCaptureViewModel.class);
-
+        viewModel = ViewModelProviders.of(this).get(AddLibraryViewModel.class);
+        setupViews();
         setupActionBar();
-        setupCameraDefaults();
+        setupCamera();
+        setupGestureDetectors();
+        observeOrientation();
+        setupListeners();
 
-        if (cameraPermissionIsGranted()){
-            createCameraSource(autoFocus, useFlash);
-        } else {
-            requestCameraPermission();
-        }
+    }
 
-        gestureDetector = new GestureDetector(this, new CaptureGestureListener());
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+
+    private void setupViews() {
+        tvInstructionText = findViewById(R.id.tvInstructionText);
+        cameraPreview = findViewById(R.id.cameraPreview);
+        graphicOverlay = findViewById(R.id.graphicOverlay);
+        tvCountDown = findViewById(R.id.tvCountDown);
+        captureButton = findViewById(R.id.addLibraryCaptureButton);
+        finishButton = findViewById(R.id.addLibraryFinishButton);
+        orientationLayout = findViewById(R.id.orientationLayout);
     }
 
     private void setupActionBar() {
@@ -108,93 +116,148 @@ public class SimpleCaptureActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    private void setupCamera() {
+        // Set good defaults for capturing text.
+        boolean autoFocus = true;
+        boolean useFlash = false;
 
-    private void setupCameraDefaults() {
-        autoFocus = true;
-        useFlash = false;
+        // Check for the camera permission before accessing the camera.  If the
+        // permission is not granted yet, request permission.
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            createCameraSource(autoFocus, useFlash);
+        } else {
+            requestCameraPermission();
+        }
     }
 
+    private void setupGestureDetectors() {
+        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == android.R.id.home){
             onBackPressed();
-            return true;
+            return false;
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public boolean onTouchEvent(MotionEvent e) {
-        boolean b = scaleGestureDetector.onTouchEvent(e);
-
-        boolean c = gestureDetector.onTouchEvent(e);
-
-        return b || c || super.onTouchEvent(e);
+    private void setupListeners() {
+        captureButton.setOnClickListener(this);
+        finishButton.setOnClickListener(this);
     }
 
+    private void observeOrientation() {
+        SensorManager sensorManager = (SensorManager)this.getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
+        sensorManager.registerListener(new SensorEventListener() {
+            int orientation = OUT;
+
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if(event.values[1] < 6.5 && event.values[1] > -6.5){
+                    if(orientation != LANDSCAPE){
+                        orientationUpdated(LANDSCAPE);
+                    }
+                    orientation = LANDSCAPE;
+                } else {
+                    if (orientation != PORTRAIT){
+                        orientationUpdated(PORTRAIT);
+                    }
+                    orientation = PORTRAIT;
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        }, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    private void orientationUpdated(int orientation) {
+        if (orientation == PORTRAIT){
+            orientationLayout.setVisibility(View.VISIBLE);
+        } else {
+            orientationLayout.setVisibility(View.GONE);
+        }
+    }
+
+
+    // -------------------------
+    //     CAPTURE ON GOING
+    // -------------------------
 
     /**
-     * onTap is called to send the tapped TextBlock, if any, out loud.
-     *
-     * @param rawX - the raw position of the tap
-     * @param rawY - the raw position of the tap.
-     * @return true if the tap was on a TextBlock
+     * Start a five seconds capture
+     * Save all texts every half seconds : 10 List<String>
+     * At the end analyze all list and save the books
      */
-    private boolean onTap(float rawX, float rawY) {
-        OcrGraphic graphic = graphicOverlay.getGraphicAtLocation(rawX, rawY);
-        TextBlock text = null;
-        if (graphic != null) {
-            text = graphic.getTextBlock();
-            if (text != null && text.getValue() != null) {
-                Log.d(TAG, "text data is being spoken! " + text.getValue());
-                returnToAddBookFragment(text.getValue());
+    private void startCountDownCapture() {
+        // freezeCaptureButton()
+        captureButton.setEnabled(false);
+        // showCountdown()
+        tvCountDown.setVisibility(View.VISIBLE);
+        //TODO showMessageText()
+
+        new CountDownTimer(5000, 500) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                //TODO updateCountDown TextView
+                updateCountDownTextView(millisUntilFinished);
+                //TODO each 500millis viewModel.startCaptureSession
+                Log.d(TAG, "onTick: millis until finished " + millisUntilFinished);
+                Set<OcrGraphic> graphicsOverlay = graphicOverlay.getGraphics();
+                if (graphicsOverlay.size() != 0){
+                    viewModel.saveGraphicsTexts(graphicsOverlay);
+                }
             }
-            else {
-                Log.d(TAG, "text data is null");
-                Toast.makeText(this, "Aucun texte détecté", Toast.LENGTH_SHORT).show();
+
+            @Override
+            public void onFinish() {
+
+                //TODO viewModel.analyzeAllText()
+                viewModel.analyzeAllText();
+                // !freezeCaptureButton()
+                captureButton.setEnabled(true);
+                // hideCountdown()
+                tvCountDown.setVisibility(View.GONE);
+
+                //TODO changeMessageText()
             }
+        }.start();
+
+
+    }
+
+    private void updateCountDownTextView(long millisUntilFinished) {
+        int millisInSecond =  (int)(millisUntilFinished / 1000);
+        tvCountDown.setText(String.valueOf(millisInSecond));
+    }
+
+
+    // ---------------------
+    //        ACTIONS
+    // ---------------------
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case (R.id.addLibraryCaptureButton):
+                startCountDownCapture();
+                break;
+            case (R.id.addLibraryFinishButton):
+                // TODO finish scanning
+                break;
         }
-        else {
-            Log.d(TAG,"no text detected");
-            Toast.makeText(this, "Aucun texte détecté", Toast.LENGTH_SHORT).show();
-        }
-        return text != null;
-
-    }
-
-    private void returnToAddBookFragment(String searchText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Rechercher le livre :")
-                .setMessage(searchText)
-                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Return capturedText to AddBookFragment
-                        Intent intent = new Intent();
-                        intent.putExtra(BUNDLE_EXTRA_TEXT, searchText);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
-                })
-                .create()
-                .show();
     }
 
 
-
-    private boolean cameraPermissionIsGranted() {
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        return rc == PackageManager.PERMISSION_GRANTED;
-    }
-
+    // ---------------------
+    //    CAMERA METHODS
+    // ---------------------
     /**
      * Handles the requesting of the camera permission.  This includes
      * showing a "Snackbar" message of why the permission is needed then
@@ -225,6 +288,13 @@ public class SimpleCaptureActivity extends AppCompatActivity {
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
                 .show();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        boolean b = scaleGestureDetector.onTouchEvent(e);
+
+        return b || super.onTouchEvent(e);
     }
 
     /**
@@ -285,8 +355,8 @@ public class SimpleCaptureActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (preview != null) {
-            preview.stop();
+        if (cameraPreview != null) {
+            cameraPreview.stop();
         }
     }
 
@@ -297,8 +367,8 @@ public class SimpleCaptureActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (preview != null) {
-            preview.release();
+        if (cameraPreview != null) {
+            cameraPreview.release();
         }
     }
 
@@ -370,7 +440,7 @@ public class SimpleCaptureActivity extends AppCompatActivity {
 
         if (cameraSource != null) {
             try {
-                preview.start(cameraSource, graphicOverlay);
+                cameraPreview.start(cameraSource, graphicOverlay);
             } catch (IOException e) {
                 Log.e(TAG, "Unable to start camera source.", e);
                 cameraSource.release();
@@ -382,63 +452,18 @@ public class SimpleCaptureActivity extends AppCompatActivity {
 
 
 
-
-    private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            return onTap(e.getRawX(), e.getRawY()) || super.onSingleTapConfirmed(e);
-        }
-    }
-
     private class ScaleListener implements ScaleGestureDetector.OnScaleGestureListener {
 
-        /**
-         * Responds to scaling events for a gesture in progress.
-         * Reported by pointer motion.
-         *
-         * @param detector The detector reporting the event - use this to
-         *                 retrieve extended info about event state.
-         * @return Whether or not the detector should consider this event
-         * as handled. If an event was not handled, the detector
-         * will continue to accumulate movement until an event is
-         * handled. This can be useful if an application, for example,
-         * only wants to update scaling factors if the change is
-         * greater than 0.01.
-         */
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             return false;
         }
 
-        /**
-         * Responds to the beginning of a scaling gesture. Reported by
-         * new pointers going down.
-         *
-         * @param detector The detector reporting the event - use this to
-         *                 retrieve extended info about event state.
-         * @return Whether or not the detector should continue recognizing
-         * this gesture. For example, if a gesture is beginning
-         * with a focal point outside of a region where it makes
-         * sense, onScaleBegin() may return false to ignore the
-         * rest of the gesture.
-         */
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             return true;
         }
 
-        /**
-         * Responds to the end of a scale gesture. Reported by existing
-         * pointers going up.
-         * <p/>
-         * Once a scale has ended, {@link ScaleGestureDetector#getFocusX()}
-         * and {@link ScaleGestureDetector#getFocusY()} will return focal point
-         * of the pointers remaining on the screen.
-         *
-         * @param detector The detector reporting the event - use this to
-         *                 retrieve extended info about event state.
-         */
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             if (cameraSource != null) {
@@ -446,6 +471,5 @@ public class SimpleCaptureActivity extends AppCompatActivity {
             }
         }
     }
-
 
 }

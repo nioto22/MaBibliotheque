@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1058564210455",
+    "firebase_url": "https://ma-bibliotheque-9bbff.firebaseio.com",
+    "project_id": "ma-bibliotheque-9bbff",
+    "storage_bucket": "ma-bibliotheque-9bbff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1058564210455:android:517cc62fe0997948974152",
+        "android_client_info": {
+          "package_name": "com.aprouxdev.mabibliotheque"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1058564210455-4u7so2k7rmdmk0or2pl6pev02ldnqfci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_VcpXDS6XjWNaDNzHaxPqpY6qvnIEVG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1058564210455-4u7so2k7rmdmk0or2pl6pev02ldnqfci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

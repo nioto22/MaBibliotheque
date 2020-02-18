@@ -14,7 +14,7 @@ import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.BookAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
-import com.aprouxdev.mabibliotheque.ui.camera.SimpleCaptureActivity;
+import com.aprouxdev.mabibliotheque.ui.addCapturedBook.SimpleCaptureActivity;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 

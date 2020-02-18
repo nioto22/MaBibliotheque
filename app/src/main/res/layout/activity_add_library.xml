@@ -77,7 +77,6 @@
 
     </RelativeLayout>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonLayout"
         android:layout_width="wrap_content"
@@ -87,20 +86,21 @@
         android:gravity="center"
         android:orientation="vertical">
 
+
         <ImageButton
-            android:id="@+id/captureButton"
+            android:id="@+id/addLibraryCaptureButton"
             android:layout_width="80dp"
             android:layout_height="45dp"
             android:background="@color/background_secondary_grey"
             android:rotation="90"
             android:src="@drawable/camera_icon"
-            app:layout_constraintBottom_toTopOf="@+id/finishButton"
+            app:layout_constraintBottom_toTopOf="@+id/addLibraryFinishButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/finishButton"
+            android:id="@+id/addLibraryFinishButton"
             android:layout_width="80dp"
             android:layout_height="45dp"
             android:background="@color/background_secondary_grey"
@@ -112,7 +112,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/captureButton" />
+            app:layout_constraintTop_toBottomOf="@+id/addLibraryCaptureButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

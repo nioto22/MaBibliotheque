@@ -27,12 +27,8 @@
         android:name="com.aprouxdev.mabibliotheque.ui.main.addBook.AddBookFragment"
         android:label="@string/add_book"
         tools:layout="@layout/add_book_fragment"/>
+    
 
-    <fragment
-        android:id="@+id/addLibraryScreen"
-        android:name="com.aprouxdev.mabibliotheque.ui.main.addLibrary.AddLibraryFragment"
-        android:label="@string/add_library"
-        tools:layout="@layout/add_library_fragment"/>
 
 
 </navigation>

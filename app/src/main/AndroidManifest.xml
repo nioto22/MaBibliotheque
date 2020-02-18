@@ -24,8 +24,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.bookDetail.BookDetailActivity"></activity>
-        <activity android:name=".ui.camera.SimpleCaptureActivity" />
+        <activity android:name=".ui.authentication.EmailPasswordActivity"></activity>
+        <activity android:name=".ui.authentication.LoginActivity" />
+        <activity android:name=".ui.addCapturedLibrary.AddLibraryActivity" />
+        <activity android:name=".ui.bookDetail.BookDetailActivity" />
+        <activity android:name=".ui.addCapturedBook.SimpleCaptureActivity" />
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

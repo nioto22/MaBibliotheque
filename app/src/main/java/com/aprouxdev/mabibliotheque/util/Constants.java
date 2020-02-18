@@ -17,6 +17,9 @@ public class Constants {
     // BUNDLE
     public static final String BUNDLE_EXTRA_BOOK = "BUNDLE_EXTRA_BOOK";
     public static final String BUNDLE_EXTRA_IS_NEW_BOOK = "BUNDLE_EXTRA_IS_NEW_BOOK";
+    public static final int ADD_LIBRARY_INTENT_FOR_RESULT = 12 ;
+    public static final int ADD_LIBRARY_DRAWER_ITEM_INDEX = 3;
+
 
     // Library data
     public static final List<Integer> SMALL_CELL_SIZE = Arrays.asList(4, 4);
@@ -28,9 +31,9 @@ public class Constants {
     public static enum VIEWS_PREF {
         LIST,
         SMALL,
-        MEDIUM;
+        MEDIUM
     }
+    public static final String SHARED_PREF_NO_LOGIN = "SHARED_PREF_LOGIN";
 }
 
 
-// https://www.googleapis.com/books/v1/volumes?q=les fureurs invisibles

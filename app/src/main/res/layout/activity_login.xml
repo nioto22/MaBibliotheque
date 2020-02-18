@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.authentication.LoginActivity"
+    android:background="@color/background_third_taupe">
+
+    <TextView
+        android:id="@+id/loginActivityHeaderTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:gravity="center_horizontal"
+        android:paddingTop="@dimen/xl_40dp"
+        android:textColor="@color/text_secondary_white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:background="@drawable/library_header"/>
+
+    <TextView
+        android:id="@+id/loginWelcomeTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginActivityHeaderTextView"
+        android:text="@string/login_activity_welcome_text"
+        android:textColor="@color/text_primary_black"
+        android:textSize="20sp"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/xl_40dp"
+        android:layout_marginBottom="@dimen/xl_40dp"/>
+    <TextView
+        android:id="@+id/loginFirstSentence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginWelcomeTextView"
+        android:gravity="center"
+        android:paddingStart="@dimen/large_20dp"
+        android:paddingEnd="@dimen/large_20dp"
+        android:text="@string/login_activity_first_sentence"
+        android:textColor="@color/text_primary_black"
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/loginSecondSentence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginFirstSentence"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/small_8dp"
+        android:layout_marginBottom="@dimen/large_20dp"
+        android:paddingStart="@dimen/large_20dp"
+        android:paddingEnd="@dimen/large_20dp"
+        android:text="@string/login_activity_second_sentence"
+        android:textColor="@color/text_primary_black"
+        android:textSize="20sp"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginSecondSentence"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/loginLoginButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/normal_10dp"
+            android:layout_marginEnd="@dimen/large_20dp"
+            android:background="@color/background_primary_blue"
+            android:text="@string/login_activity_connexion_button"
+            android:textColor="@color/text_secondary_white"
+            android:textStyle="bold"
+            android:translationZ="@dimen/medium_12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/loginCancelButton"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/loginCancelButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/normal_10dp"
+            android:layout_marginEnd="@dimen/large_20dp"
+            android:background="@color/background_primary_blue"
+            android:text="@string/login_activity_skip_button"
+            android:textColor="@color/text_secondary_white"
+            android:textStyle="bold"
+            android:translationZ="@dimen/medium_12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/loginLoginButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

@@ -10,11 +10,11 @@
         >
 
         <menu>
-            <item android:id="@+id/profile"
+            <item android:id="@+id/mainMenuProfile"
                 android:title="@string/profile" />
-            <item android:id="@+id/parameter"
-                android:title="@string/parameter" />
-            <item android:id="@+id/logout"
+            <item android:id="@+id/mainMenuDeleteAccount"
+                android:title="@string/delete" />
+            <item android:id="@+id/mainMenuLogout"
                 android:title="@string/logout" />
         </menu>
     </item>
