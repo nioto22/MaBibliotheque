@@ -25,9 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
-import com.aprouxdev.mabibliotheque.viewmodels.BookViewModel;
+import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
@@ -35,6 +39,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -44,7 +49,7 @@ import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_IS_NEW_BOOK;
 import static com.aprouxdev.mabibliotheque.util.Constants.months;
 
-public class BookDetailActivity extends AppCompatActivity implements View.OnClickListener{
+public class BookDetailActivity extends BaseActivity implements View.OnClickListener{
     private static final String TAG = "BookDetailActivity";
 
     // UI VARS
@@ -87,11 +92,12 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     RelativeLayout commentContentLayout;
     TextView commentTextView;
     EditText commentEditText;
+
     // Data Vars
     private int numberOfEditableOpen;
     private Book oldBook;
     private Book book;
-    private BookViewModel viewModel;
+    private LocalBookViewModel viewModel;
     private int numberOfStars;
     private boolean isANewBook;
 
@@ -100,7 +106,6 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_book_detail);
 
         oldBook = getCurrentBook();
         try {
@@ -109,7 +114,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             e.printStackTrace();
         }
 
-        viewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(LocalBookViewModel.class);
 
         setupViews();
         setupActionBar();
@@ -118,6 +123,10 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         setupData();
     }
 
+    @Override
+    public int getFragmentLayout() {
+        return (R.layout.activity_book_detail);
+    }
 
 
     @Override
@@ -132,8 +141,24 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     // --------------------
 
     private void saveCurrentBook() {
-        viewModel.insert(book);
-        Toast.makeText(this, "Livre sauvegardé", Toast.LENGTH_SHORT).show();
+        if (bIsUserPrefNoLogin) {
+            viewModel.insert(book);
+            Toast.makeText(this, "Livre sauvegardé", Toast.LENGTH_SHORT).show();
+        }
+        else LibraryHelper.addBook(bUserUid, book).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Log.d(TAG, "Task successful: Book added");
+                    Toast.makeText(getApplicationContext(), "Livre sauvegardé", Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.w(TAG, "Task not successful : ", task.getException());
+                }
+
+            }
+        });
+
+
     }
 
     private boolean bookHasCHanged(){

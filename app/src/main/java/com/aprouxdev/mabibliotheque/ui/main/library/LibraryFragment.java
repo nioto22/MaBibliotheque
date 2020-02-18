@@ -27,7 +27,7 @@ import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
-import com.aprouxdev.mabibliotheque.viewmodels.BookViewModel;
+import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class LibraryFragment extends Fragment
 
     // Data Vars
     private LibraryAdapter libraryAdapter;
-    private BookViewModel bookViewModel;
+    private LocalBookViewModel localBookViewModel;
     private LibraryViewModel viewModel;
     private List<Book> libraryBooks;
     private List<Book> filteredBooks;
@@ -105,7 +105,7 @@ public class LibraryFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        bookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
+        localBookViewModel = ViewModelProviders.of(this).get(LocalBookViewModel.class);
         viewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
 
         subscribeObservers();
@@ -129,7 +129,7 @@ public class LibraryFragment extends Fragment
 
 
     private void subscribeObservers() {
-        bookViewModel.getBooks().observe(getViewLifecycleOwner(), new Observer<List<Book>>() {
+        localBookViewModel.getBooks().observe(getViewLifecycleOwner(), new Observer<List<Book>>() {
             @Override
             public void onChanged(List<Book> books) {
                 libraryBooks = books;

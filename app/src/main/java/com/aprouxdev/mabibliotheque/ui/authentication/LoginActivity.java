@@ -1,46 +1,36 @@
 package com.aprouxdev.mabibliotheque.ui.authentication;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
-import com.google.firebase.auth.FirebaseAuth;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NO_LOGIN;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends BaseActivity implements View.OnClickListener{
     private static final String TAG = "LoginActivity";
 
     // UI Vars
     private Button loginButton;
     private Button cancelButton;
 
-    // Data
-    private SharedPreferences preferences;
-
-    // Firebase
-    private FirebaseAuth mAuth;
-    private static final int RC_SIGN_IN = 123;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-        preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
-        mAuth = FirebaseAuth.getInstance();
 
         setupViews();
     }
 
+    @Override
+    public int getFragmentLayout() {
+        return (R.layout.activity_login);
+    }
 
 
     private void setupViews() {
@@ -69,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void skipSignInActivity() {
-        preferences.edit().putBoolean(SHARED_PREF_NO_LOGIN, true).apply();
+        bPreferences.edit().putBoolean(SHARED_PREF_NO_LOGIN, true).apply();
         Intent intentToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intentToMainActivity);
     }

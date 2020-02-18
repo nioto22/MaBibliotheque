@@ -1,10 +1,6 @@
 package com.aprouxdev.mabibliotheque.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.text.Editable;
-
-import com.aprouxdev.mabibliotheque.database.MetaData;
+import com.aprouxdev.mabibliotheque.database.localDatabase.MetaData;
 
 import java.io.Serializable;
 
@@ -30,8 +26,26 @@ public class Book implements Serializable, Cloneable {
     private String saveTimestamp;
     private String readTimestamp;
 
+    public Book() {
+    }
 
-
+    public Book(@NonNull String id, String title, String author, String thumbnailLink,
+                String description, String category, int pageCount, Boolean hasBeenRead, int mark,
+                String comment, String loan, String saveTimestamp, String readTimestamp) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.thumbnailLink = thumbnailLink;
+        this.description = description;
+        this.category = category;
+        this.pageCount = pageCount;
+        this.hasBeenRead = hasBeenRead;
+        this.mark = mark;
+        this.comment = comment;
+        this.loan = loan;
+        this.saveTimestamp = saveTimestamp;
+        this.readTimestamp = readTimestamp;
+    }
 
     // GETTER
     public String getId() {
@@ -41,17 +55,18 @@ public class Book implements Serializable, Cloneable {
         return title;
     }
     public String getAuthor() { return author; }
+
+    // API INFORMATION
     public String getThumbnailLink() {
         return thumbnailLink;
     }
-    /**
-     * @return null as base info do not have description data.
-     */
     public String getDescription() {
         return description;
     }
     public String getCategory() { return category;   }
     public int getPageCount() {  return pageCount;   }
+
+    // USER ADDED INFORMATION
     public Boolean getHasBeenRead() { return hasBeenRead; }
     public int getMark() { return mark; }
     public String getComment() {  return comment;   }

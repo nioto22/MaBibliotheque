@@ -11,38 +11,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-public class EmailPasswordActivity extends AppCompatActivity implements View.OnClickListener {
+public class EmailPasswordActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "EmailPasswordActivity";
 
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView statusTextView;
     private ProgressBar progressBar;
-    private FirebaseAuth mAuth;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_email_password);
-
-        mAuth = FirebaseAuth.getInstance();
         setupViews();
         setupButtons();
+    }
+
+    @Override
+    public int getFragmentLayout() {
+        return (R.layout.activity_email_password);
     }
 
     private void setupViews() {
@@ -63,25 +63,27 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
         if (invalidForm()) return;
         showProgressBar();
 
-        mAuth.createUserWithEmailAndPassword(email, password)
+        bAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
-                            Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            navigateToMainActivity();
+                            Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
+                            // TODO AddUser to firestore
+                            addUserToFirestore();
+                            //navigateToMainActivity();
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             // Catch Firebase exception
                             try {
                                 throw Objects.requireNonNull(task.getException());
                             } catch (FirebaseAuthUserCollisionException e){
-                                Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_toast_create_account_failure), Toast.LENGTH_SHORT).show();
-                                statusTextView.setText(getResources().getString(R.string.email_login_activity_create_user_fail_user_collision_alert));
+                                Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_create_account_failure), Toast.LENGTH_SHORT).show();
+                                statusTextView.setText(getTheString(R.string.email_login_activity_create_user_fail_user_collision_alert));
                             } catch (Exception e){
-                                statusTextView.setText(getResources().getString(R.string.email_login_activity_create_user_fail_alert));
-                                Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_toast_create_account_failure), Toast.LENGTH_SHORT).show();
+                                statusTextView.setText(getTheString(R.string.email_login_activity_create_user_fail_alert));
+                                Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_create_account_failure), Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -97,22 +99,23 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
         resetStatusTextView();
         if (invalidForm()) return;
         showProgressBar();
-        mAuth.signInWithEmailAndPassword(email, password)
+        bAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
-                            Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            navigateToMainActivity();
+                            Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
+                            addUserToFirestore();
+                            //navigateToMainActivity();
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_toast_sign_in_failure),
+                            Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_sign_in_failure),
                                     Toast.LENGTH_SHORT).show();
                         }
 
                         if (!task.isSuccessful()) {
-                            statusTextView.setText(getResources().getString(R.string.email_login_activity_status_text_view_connexion_failure));
+                            statusTextView.setText(getTheString(R.string.email_login_activity_status_text_view_connexion_failure));
                         }
                         hideProgressBar();
                     }
@@ -120,28 +123,40 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
     }
 
 
-
     private void sendPasswordResetEmail() {
         String email = emailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            emailEditText.setError(getResources().getString(R.string.email_login_activity_required_error));
+            emailEditText.setError(getTheString(R.string.email_login_activity_required_error));
         } else {
             emailEditText.setError(null);
-            mAuth.sendPasswordResetEmail(email)
+            bAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.email_login_activity_email_send), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_email_send), Toast.LENGTH_SHORT).show();
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(EmailPasswordActivity.this, getResources().getString(R.string.toast_failure_try_again), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.toast_failure_try_again), Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void addUserToFirestore() {
+        UserHelper.createUser(bUserUid, bIsUserPrefNoLogin).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+               if (task.isSuccessful()){
+                  navigateToMainActivity();
+               } else {
+                   Log.w(TAG, "Create User task not successful: ", task.getException());
+               }
+            }
+        });
     }
 
     private void resetStatusTextView() {
@@ -149,7 +164,6 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
         if (!TextUtils.isEmpty(status)){
             statusTextView.setText("");
         }
-
     }
 
     private boolean invalidForm() {
@@ -157,7 +171,7 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
 
         String email = emailEditText.getText().toString();
         if (TextUtils.isEmpty(email)) {
-            emailEditText.setError(getResources().getString(R.string.email_login_activity_required_error));
+            emailEditText.setError(getTheString(R.string.email_login_activity_required_error));
             valid = true;
         } else {
             emailEditText.setError(null);
@@ -165,7 +179,7 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
 
         String password = passwordEditText.getText().toString();
         if (TextUtils.isEmpty(password)) {
-            passwordEditText.setError(getResources().getString(R.string.email_login_activity_required_error));
+            passwordEditText.setError(getTheString(R.string.email_login_activity_required_error));
             valid = true;
         } else {
             passwordEditText.setError(null);

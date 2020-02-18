@@ -11,28 +11,29 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.HorizontalAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
-import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
-import com.aprouxdev.mabibliotheque.ui.main.library.LibraryFragment;
-import com.aprouxdev.mabibliotheque.viewmodels.BookViewModel;
+import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static com.aprouxdev.mabibliotheque.ui.main.MainActivity.BUNDLE_IS_USER_PREF_NO_LOGIN;
+import static com.aprouxdev.mabibliotheque.ui.main.MainActivity.BUNDLE_USER_UID;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 
 public class HomeFragment extends Fragment
@@ -65,8 +66,10 @@ public class HomeFragment extends Fragment
 
 
     // DATA
+    private boolean bIsLocalDatabase;
+    private String bUserUid;
     private HomeViewModel mViewModel;
-    private BookViewModel bookViewModel;
+    private LocalBookViewModel localBookViewModel;
     private List<Book> allBooks = new ArrayList<>();
     private List<Book> toReadBooks = new ArrayList<>();
     private List<Book> favoriteBooks = new ArrayList<>();
@@ -87,11 +90,27 @@ public class HomeFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (getArguments() != null) {
+            bIsLocalDatabase = getArguments().getBoolean(BUNDLE_IS_USER_PREF_NO_LOGIN);
+            bUserUid = getArguments().getString(BUNDLE_USER_UID);
+            Log.d(TAG, "onActivityCreated: is local database : " + bIsLocalDatabase );
+            Log.d(TAG, "onActivityCreated: user id" + bUserUid);
+        }
+
         mViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        bookViewModel = ViewModelProviders.of(this).get(BookViewModel.class);
-        subscribeObservers();
+        localBookViewModel = ViewModelProviders.of(this).get(LocalBookViewModel.class);
+
+
+
+        if(bIsLocalDatabase){
+            subscribeLocalObservers();
+        } else {
+            subscribeFirestoreObservers();
+        }
         setupData();
     }
+
+
 
 
     @Override
@@ -103,21 +122,49 @@ public class HomeFragment extends Fragment
 
     }
 
-    private void subscribeObservers() {
-        bookViewModel.getBooks().observe(getViewLifecycleOwner(), new Observer<List<Book>>() {
+    private void subscribeFirestoreObservers() {
+        if(bUserUid != null){
+            LibraryHelper.getAllBooks(bUserUid).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot books,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+
+                    for (QueryDocumentSnapshot document : books) {
+                        if (document != null){
+                            final Book book = document.toObject(Book.class);
+                            Log.d(TAG, "onEvent: Get Book successfull book name = " + book.getTitle());
+                            Log.d(TAG, "onEvent: Get Book successfull book id = " + book.getId());
+                            allBooks.add(book);
+                        }
+                    }
+                    updateAllData();
+                }
+            });
+        }
+
+    }
+
+    private void subscribeLocalObservers() {
+        localBookViewModel.getBooks().observe(getViewLifecycleOwner(), new Observer<List<Book>>() {
             @Override
             public void onChanged(List<Book> books) {
                 allBooks = books;
-                toReadBooks = mViewModel.setupToReadBooks(books);
-                favoriteBooks = mViewModel.setupFavoriteBooks(books);
-                setupData();
-                setupNoBookViews();
-                setupRecyclerViews();
+                updateAllData();
             }
         });
     }
 
-
+    private void updateAllData() {
+        toReadBooks = mViewModel.setupToReadBooks(allBooks);
+        favoriteBooks = mViewModel.setupFavoriteBooks(allBooks);
+        setupData();
+        setupNoBookViews();
+        setupRecyclerViews();
+    }
 
 
     // -----------------------

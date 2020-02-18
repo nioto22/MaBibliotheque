@@ -101,6 +101,8 @@ dependencies {
     // FIREBASE
     // Firebase Authentication
     implementation 'com.google.firebase:firebase-auth:19.2.0'
+    // Firebase Cloud Firestore
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'
 
 
 }

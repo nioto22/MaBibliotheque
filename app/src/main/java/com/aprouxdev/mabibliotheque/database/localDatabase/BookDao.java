@@ -1,6 +1,4 @@
-package com.aprouxdev.mabibliotheque.database;
-
-import android.app.Activity;
+package com.aprouxdev.mabibliotheque.database.localDatabase;
 
 import com.aprouxdev.mabibliotheque.models.Book;
 
@@ -14,7 +12,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import static com.aprouxdev.mabibliotheque.database.MetaData.Query.*;
+import static com.aprouxdev.mabibliotheque.database.localDatabase.MetaData.Query.*;
 
 @Dao
 public interface BookDao {

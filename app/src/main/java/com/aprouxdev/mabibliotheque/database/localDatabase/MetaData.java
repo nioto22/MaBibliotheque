@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.database;
+package com.aprouxdev.mabibliotheque.database.localDatabase;
 
 public interface MetaData {
 

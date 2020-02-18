@@ -86,9 +86,12 @@
     <string name="books_title">Livres :</string>
     <string name="to_read_title">A lire :</string>
     <string name="last_entries_title">Dernières entrées :</string>
-    <!-- Toasts -->
+
+    <!-- Toasts & Alert Dialog-->
     <string name="toast_unknown_error">Une erreur inconnue est survenue !!</string>
     <string name="toast_failure_try_again">Une erreur inconnue est survenue; veuillez réessayer !</string>
+    <string name="yes_maj">OUI</string>
+    <string name="no_maj">NON</string>
 
 
     <!-- FILTERS  -->
@@ -120,6 +123,12 @@
     <string name="email_login_activity_toast_login_successful">Connexion réussie !!</string>
     <string name="email_login_activity_create_user_fail_user_collision_alert">Cette adresse email est déjà associée à un compte ! Veuillez cliquer sur Connexion</string>
     <string name="email_login_activity_create_user_fail_alert">La création du compte à échouée; veuillez réessayer</string>
+
+
+    <!-- Main Activity -->
+    <string name="main_activity_delete_account_alert_title">Êtes-vous sûr de vouloir supprimer définitivement votre compte et perdre toute votre bibliothèque ?</string>
+    <string name="main_activity_toast_account_deleted">Compte supprimé</string>
+    <string name="main_activity_toast_no_account">Aucun compte associé</string>
 
 
 </resources>
