@@ -315,52 +315,43 @@
                     android:layout_marginEnd="@dimen/large_20dp"
                     android:layout_toEndOf="@+id/filterLayoutMarkTitleTitle"
                     android:layout_alignBottom="@+id/filterLayoutMarkTitleTitle">
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/filterStar1Button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/thin_2dp"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/xs_4dp"
                         android:src="@drawable/ic_empty_star"
                         android:tag="1"/>
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/filterStar2Button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/thin_2dp"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/xs_4dp"
                         android:src="@drawable/ic_empty_star"
                         android:tag="2"/>
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/filterStar3Button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/thin_2dp"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/xs_4dp"
                         android:src="@drawable/ic_empty_star"
                         android:tag="3"/>
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/filterStar4Button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/thin_2dp"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/xs_4dp"
                         android:src="@drawable/ic_empty_star"
                         android:tag="4"/>
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/filterStar5Button"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="@dimen/thin_2dp"
-                        android:background="@android:color/transparent"
-                        android:padding="@dimen/xs_4dp"
                         android:src="@drawable/ic_empty_star"
                         android:tag="5"/>
                     <TextView
+                        android:id="@+id/filterStarAndMoreTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/thin_2dp"

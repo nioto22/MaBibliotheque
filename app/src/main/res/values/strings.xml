@@ -37,6 +37,10 @@
     <string name="read_state">Lu</string>
     <string name="not_read_state">Pas encore lu</string>
 
+    <!-- All Filter Spinners  -->
+    <string name="readAndCategoryAllFilter">Tous</string>
+    <string name="markAllFilter">Toutes</string>
+    <string name="read_filter_read">Lu</string>
     <!-- ReadSpinner  -->
     <string-array name="read_array">
         <item>Tous</item>

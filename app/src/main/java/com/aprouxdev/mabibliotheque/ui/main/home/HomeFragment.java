@@ -1,6 +1,7 @@
 package com.aprouxdev.mabibliotheque.ui.main.home;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.HorizontalAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
+import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -90,12 +92,8 @@ public class HomeFragment extends Fragment
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getArguments() != null) {
-            bIsLocalDatabase = getArguments().getBoolean(BUNDLE_IS_USER_PREF_NO_LOGIN);
-            bUserUid = getArguments().getString(BUNDLE_USER_UID);
-            Log.d(TAG, "onActivityCreated: is local database : " + bIsLocalDatabase );
-            Log.d(TAG, "onActivityCreated: user id" + bUserUid);
-        }
+
+        getBasedVars();
 
         mViewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
         localBookViewModel = ViewModelProviders.of(this).get(LocalBookViewModel.class);
@@ -110,7 +108,13 @@ public class HomeFragment extends Fragment
         setupData();
     }
 
-
+    private void getBasedVars() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            if (mainActivity.bUserUid != null) bUserUid = mainActivity.bUserUid;
+            bIsLocalDatabase = mainActivity.bIsUserPrefNoLogin;
+        }
+    }
 
 
     @Override
@@ -132,20 +136,19 @@ public class HomeFragment extends Fragment
                         Log.w(TAG, "Listen failed.", e);
                         return;
                     }
-
+                    allBooks = new ArrayList<>();
                     for (QueryDocumentSnapshot document : books) {
                         if (document != null){
                             final Book book = document.toObject(Book.class);
-                            Log.d(TAG, "onEvent: Get Book successfull book name = " + book.getTitle());
-                            Log.d(TAG, "onEvent: Get Book successfull book id = " + book.getId());
                             allBooks.add(book);
                         }
                     }
                     updateAllData();
                 }
             });
+        } else {
+            subscribeLocalObservers();
         }
-
     }
 
     private void subscribeLocalObservers() {
@@ -216,8 +219,7 @@ public class HomeFragment extends Fragment
 
     private String getFormattedText(int resource, int size) {
         String charPlural = size > 1 ? "s" : "";
-        String formattedText = (getResources().getString(resource)) + charPlural;
-        return formattedText;
+        return (getResources().getString(resource)) + charPlural;
     }
 
     private void setupNoBookViews() {

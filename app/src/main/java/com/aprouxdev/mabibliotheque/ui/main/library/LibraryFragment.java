@@ -24,12 +24,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
+import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
+import com.aprouxdev.mabibliotheque.util.Constants;
+import com.aprouxdev.mabibliotheque.util.Constants.FILTERS;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +55,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.DELETE_BUTTON_CLICKED;
 import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.SHARE_BUTTON_CLICKED;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
+import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.CATEGORY;
+import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.MARK;
+import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.READ;
 import static com.aprouxdev.mabibliotheque.util.Constants.MEDIUM_CELL_SIZE;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_VIEW;
@@ -67,6 +79,7 @@ public class LibraryFragment extends Fragment
     private RecyclerView libraryRecyclerView;
     // Filter Menu
     private RelativeLayout filterLayout;
+    private TextView filterLayoutTitle;
     private Button closeFilterListener;
     private View openFilterGestureListener;
     private ImageView viewFilterListButton;
@@ -76,9 +89,14 @@ public class LibraryFragment extends Fragment
     private Spinner filterLayoutCategorySpinner;
     private TextView filterLayoutViewTitleInfo;
     private Spinner filterLayoutMarkSpinner;
+    private ImageView filterStar1Button, filterStar2Button, filterStar3Button, filterStar4Button,
+            filterStar5Button;
+    private TextView filterStarAndMoreTextView;
 
 
     // Data Vars
+    private boolean bIsLocalDatabase;
+    private String bUserUid;
     private LibraryAdapter libraryAdapter;
     private LocalBookViewModel localBookViewModel;
     private LibraryViewModel viewModel;
@@ -91,6 +109,10 @@ public class LibraryFragment extends Fragment
     private SharedPreferences preferences;
     private int numberOfFilterUsed;
     private String firstCategory;
+
+    private String categoryFilterPosition;
+    private String readFilterPosition;
+    private String markFilterPosition;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -108,9 +130,19 @@ public class LibraryFragment extends Fragment
         localBookViewModel = ViewModelProviders.of(this).get(LocalBookViewModel.class);
         viewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
 
+        getBasedVars();
+
         subscribeObservers();
 
+    }
 
+
+    private void getBasedVars() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if (mainActivity != null) {
+            if (mainActivity.bUserUid != null) bUserUid = mainActivity.bUserUid;
+            bIsLocalDatabase = mainActivity.bIsUserPrefNoLogin;
+        }
     }
 
     @Override
@@ -127,21 +159,103 @@ public class LibraryFragment extends Fragment
     }
 
 
-
     private void subscribeObservers() {
+        if (bIsLocalDatabase) subscribeLocalObserver();
+        else subscribeFirestoreObserver();
+    }
+
+    private void subscribeFirestoreObserver() {
+        if(bUserUid != null){
+            LibraryHelper.getAllBooks(bUserUid).addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot books,
+                                    @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
+                    libraryBooks = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : books) {
+                        if (document != null){
+                            final Book book = document.toObject(Book.class);
+                            libraryBooks.add(book);
+                        }
+                    }
+                    categoryArray = viewModel.getSpinnerCategoryArray(firstCategory, libraryBooks);
+                    updateAllData();
+                }
+            });
+        } else {
+            subscribeLocalObserver();
+        }
+    }
+
+    private void subscribeLocalObserver() {
         localBookViewModel.getBooks().observe(getViewLifecycleOwner(), new Observer<List<Book>>() {
             @Override
             public void onChanged(List<Book> books) {
                 libraryBooks = books;
-                categoryArray = viewModel.getSpinnerCategoryArray(firstCategory, books);
-                setupNumberOfBooksTextView();
-                libraryAdapter.displayNewBooks(books);
-                setupCategorySpinnerView();
-                Log.d(TAG, "onChanged: " + books.toString());
+                categoryArray = viewModel.getSpinnerCategoryArray(firstCategory, libraryBooks);
+                updateAllData();
             }
         });
     }
 
+    private void updateAllData() {
+        filterAllBooks();
+        setupNumberOfBooksTextView();
+        setupCategorySpinnerView();
+    }
+
+    /**
+     * Filtration only if filterPosition != null && != AllFilters
+     * Category filtration on libraryBooks : filteredBooks keep only right category books
+     * Read and Mark filtration on filteredBooks list
+     */
+    public void filterAllBooks() {
+        filteredBooks = new ArrayList<>();
+        String categoryAndReadAllFilter = getResources().getString(R.string.readAndCategoryAllFilter);
+        String markAllFilter = getResources().getString(R.string.markAllFilter);
+        String readTrueState = getResources().getString(R.string.read_filter_read);
+
+        // Category filtration
+        if (categoryFilterPosition != null && !categoryFilterPosition.equals(categoryAndReadAllFilter)){
+            for (Book book : libraryBooks){
+                if (book.getCategory().equals(categoryFilterPosition)) filteredBooks.add(book);
+            }
+        } else {
+            filteredBooks = libraryBooks;
+        }
+        // Read filtration
+        if (readFilterPosition != null && !readFilterPosition.equals(categoryAndReadAllFilter)){
+            List<Book> tempBooks = new ArrayList<>();
+            if (readFilterPosition.equals(readTrueState)){
+                for(Book book :  filteredBooks){
+                    if (book.getHasBeenRead() != null && book.getHasBeenRead()) tempBooks.add(book);
+                }
+            } else {
+                for(Book book :  filteredBooks){
+                    if (book.getHasBeenRead() == null || !book.getHasBeenRead()) tempBooks.add(book);
+                }
+            }
+            filteredBooks = tempBooks;
+        }
+        // Mark Filtration
+        if (markFilterPosition != null && !markFilterPosition.equals(markAllFilter)){
+            List<Book> tempBooks = new ArrayList<>();
+            int minimumMark = getMarkPosition(markFilterPosition);
+            for (Book book : filteredBooks) {
+                if (book.getMark()>= minimumMark) tempBooks.add(book);
+            }
+            filteredBooks = tempBooks;
+        }
+        libraryAdapter.displayNewBooks(filteredBooks);
+    }
+
+    private int getMarkPosition(String markFilterPosition) {
+        char numberChar = markFilterPosition.charAt(0);
+        return Integer.parseInt(String.valueOf(numberChar));
+    }
 
     // -----------------------
     //      SETUP VIEWS
@@ -160,6 +274,7 @@ public class LibraryFragment extends Fragment
         libraryRecyclerView = view.findViewById(R.id.libraryRecyclerView);
         // Filter Menu
         filterLayout = view.findViewById(R.id.filterLayout);
+        filterLayoutTitle = view.findViewById(R.id.filterLayoutTitle);
         openFilterGestureListener = view.findViewById(R.id.filterGestureListener);
         closeFilterListener = view.findViewById(R.id.closeFilterListener);
         closeFilterListener.setOnClickListener(this);
@@ -176,6 +291,12 @@ public class LibraryFragment extends Fragment
         filterLayoutViewTitleInfo = view.findViewById(R.id.filterLayoutViewTitleInfo);
         filterLayoutMarkSpinner = view.findViewById(R.id.filterLayoutMarkSpinner);
         filterLayoutMarkSpinner.setOnItemSelectedListener(this);
+        filterStar1Button = view.findViewById(R.id.filterStar1Button);
+        filterStar2Button = view.findViewById(R.id.filterStar2Button);
+        filterStar3Button = view.findViewById(R.id.filterStar3Button);
+        filterStar4Button = view.findViewById(R.id.filterStar4Button);
+        filterStar5Button = view.findViewById(R.id.filterStar5Button);
+        filterStarAndMoreTextView = view.findViewById(R.id.filterStarAndMoreTextView);
 
     }
 
@@ -183,14 +304,12 @@ public class LibraryFragment extends Fragment
         setupViewsFilterView();
         setupReadFilterSpinnerView();
         setupMarkFilterSpinnerView();
-        // setupCategorySpinnerView in onChanged of observer
+        // INFO : setupCategorySpinnerView is in onChanged of observer
 
     }
 
-
-
     private void setupCategorySpinnerView() {
-        // setupCategorySpinnerView call in onChanged of observer
+        // INFO : setupCategorySpinnerView is in onChanged of observer
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), R.layout.custom_spinner_simple_item,
                 categoryArray);
         categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
@@ -246,7 +365,6 @@ public class LibraryFragment extends Fragment
             @Override
             public void onItemClick(int position) {
                 Book selectedBook = libraryAdapter.getBook(position);
-                Log.d(TAG, "onItemClick: " + selectedBook.getTitle());
                 Intent intent = new Intent(getContext(), BookDetailActivity.class);
                 intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
                 startActivity(intent);
@@ -256,7 +374,7 @@ public class LibraryFragment extends Fragment
             @Override
             public void onItemLongClick(String click, int position) {
                 Book selectedBook = libraryAdapter.getBook(position);
-                if (click == SHARE_BUTTON_CLICKED){
+                if (click.equals(SHARE_BUTTON_CLICKED)){
                     Toast.makeText(getContext(), "Share button clicked for " + selectedBook.getTitle(), Toast.LENGTH_SHORT).show();
                 } else if (click.equals(DELETE_BUTTON_CLICKED)){
                     Toast.makeText(getContext(), "Delete button clicked for " + selectedBook.getTitle(), Toast.LENGTH_SHORT).show();
@@ -361,19 +479,83 @@ public class LibraryFragment extends Fragment
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()){
             case (R.id.filterLayoutCategorySpinner):
-                //TODO update data
-                //TODO add filter int if not all
+                String categoryState = parent.getItemAtPosition(position).toString();
+                updateNumberOfFilters(CATEGORY, categoryState);
+
                 break;
             case (R.id.filterLayoutReadSpinner):
-                //TODO update data
-                //TODO add filter int if not all
+                String readState = parent.getItemAtPosition(position).toString();
+                updateNumberOfFilters(READ, readState);
                 break;
             case (R.id.filterLayoutMarkSpinner):
-                //TODO update data
-                //TODO add filter int if not all
+                String markState = parent.getItemAtPosition(position).toString();
+                updateNumberOfFilters(MARK, markState);
+                updateStarViews(markState);
                 break;
         }
     }
+
+    private void updateStarViews(String markState) {
+        int numberOfStars = markState.equals(getResources().getString(R.string.markAllFilter)) ? 0 : getMarkPosition(markState);
+        int andMoreVisibility = numberOfStars == 5 ? View.INVISIBLE : View.VISIBLE;
+        filterStarAndMoreTextView.setVisibility(andMoreVisibility);
+        List<ImageView> stars = Arrays.asList(filterStar1Button, filterStar2Button, filterStar3Button, filterStar4Button, filterStar5Button);
+        for (ImageView image : stars) {
+            image.setImageDrawable(getResources().getDrawable(R.drawable.ic_empty_star));
+        }
+        for (int i = 0; i < numberOfStars ; i++) {
+            stars.get(i).setImageDrawable(getResources().getDrawable(R.drawable.ic_full_star));
+        }
+    }
+
+    private void updateNumberOfFilters(FILTERS filterType, String filterState) {
+        String previousState;
+        switch (filterType) {
+            case CATEGORY :
+                previousState = categoryFilterPosition != null ? categoryFilterPosition : getResources().getString(R.string.readAndCategoryAllFilter);
+                if (!filterState.equals(previousState)) {  // New filter state clicked
+                    if (filterState.equals(getResources().getString(R.string.readAndCategoryAllFilter))){ // All state clicked
+                        numberOfFilterUsed --;
+                    } else if (previousState.equals(getResources().getString(R.string.readAndCategoryAllFilter))){  // Previous was All state
+                        numberOfFilterUsed ++;
+                    }
+                }
+                categoryFilterPosition = filterState;
+                break;
+            case READ :
+                previousState = readFilterPosition != null ? readFilterPosition : getResources().getString(R.string.readAndCategoryAllFilter);
+                if (!filterState.equals(previousState)) {  // New filter state clicked
+                    if (filterState.equals(getResources().getString(R.string.readAndCategoryAllFilter))){ // All state clicked
+                        numberOfFilterUsed --;
+                    } else if (previousState.equals(getResources().getString(R.string.readAndCategoryAllFilter))) {  // Previous was All state
+                        numberOfFilterUsed ++;
+                    }
+                }
+                readFilterPosition = filterState;
+                break;
+            case MARK :
+                previousState = markFilterPosition != null ? markFilterPosition : getResources().getString(R.string.markAllFilter);
+                if (!filterState.equals(previousState)) {  // New filter state clicked
+                    if (filterState.equals(getResources().getString(R.string.markAllFilter))){ // All state clicked
+                        numberOfFilterUsed --;
+                    } else if (previousState.equals(getResources().getString(R.string.markAllFilter))){  // Previous was All state
+                        numberOfFilterUsed ++;
+                    }
+                }
+                markFilterPosition = filterState;
+                break;
+        }
+        updateNumberOfFiltersViews();
+        filterAllBooks();
+    }
+
+    private void updateNumberOfFiltersViews() {
+        String filterButtonText = numberOfFilterUsed == 0 ? "Aucun sélectionné" : numberOfFilterUsed == 1 ? "1 sélectionné" : "" + numberOfFilterUsed + " sélectionnés";
+        numberOfFilterTextView.setText(filterButtonText);
+        String filterTitleText = numberOfFilterUsed == 0 ? "FILTRES" : "FILTERS (" + numberOfFilterUsed + ")";
+        filterLayoutTitle.setText(filterTitleText);
+    }
+
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 

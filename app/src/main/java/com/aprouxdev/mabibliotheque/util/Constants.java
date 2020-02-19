@@ -24,6 +24,12 @@ public class Constants {
     // Library data
     public static final List<Integer> SMALL_CELL_SIZE = Arrays.asList(4, 4);
     public static final List<Integer> MEDIUM_CELL_SIZE = Arrays.asList(3, 3);
+    public enum FILTERS {
+        VIEWS,
+        CATEGORY,
+        READ,
+        MARK
+    }
 
     // Shared Preference
     public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
@@ -34,6 +40,8 @@ public class Constants {
         MEDIUM
     }
     public static final String SHARED_PREF_NO_LOGIN = "SHARED_PREF_LOGIN";
+    public static final String SHARED_USER_UID = "SHARED_USER_UID";
+    public static final String SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN = "SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN";
 }
 
 

@@ -12,17 +12,23 @@ import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
+import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
+import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 public class EmailPasswordActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "EmailPasswordActivity";
@@ -45,6 +51,10 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         return (R.layout.activity_email_password);
     }
 
+    // ----------------------
+    //         SETUP
+    // ----------------------
+
     private void setupViews() {
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -58,6 +68,10 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         findViewById(R.id.loginPasswordLostButton).setOnClickListener(this);
     }
 
+    // ----------------------
+    //         LOGIC
+    // ----------------------
+
     private void createAccount(String email, String password) {
         resetStatusTextView();
         if (invalidForm()) return;
@@ -70,9 +84,7 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
                         if (task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            // TODO AddUser to firestore
                             addUserToFirestore();
-                            //navigateToMainActivity();
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             // Catch Firebase exception
@@ -88,10 +100,10 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
 
 
                         }
-                        hideProgressBar();
                     }
                 });
     }
+
 
 
 
@@ -107,7 +119,6 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
                             Log.d(TAG, "signInWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
                             addUserToFirestore();
-                            //navigateToMainActivity();
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_sign_in_failure),
@@ -117,7 +128,6 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
                         if (!task.isSuccessful()) {
                             statusTextView.setText(getTheString(R.string.email_login_activity_status_text_view_connexion_failure));
                         }
-                        hideProgressBar();
                     }
                 });
     }
@@ -146,11 +156,17 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         }
     }
 
+
+    /**
+     * Add user into firebase with UserHelper createUser method
+     * On complete go back to MainActivity
+     */
     private void addUserToFirestore() {
         UserHelper.createUser(bUserUid, bIsUserPrefNoLogin).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                if (task.isSuccessful()){
+                   hideProgressBar();
                   navigateToMainActivity();
                } else {
                    Log.w(TAG, "Create User task not successful: ", task.getException());
@@ -159,12 +175,29 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         });
     }
 
+
+
+    // ----------------------
+    //         UI
+    // ----------------------
+
     private void resetStatusTextView() {
         String status = statusTextView.getText().toString();
         if (!TextUtils.isEmpty(status)){
             statusTextView.setText("");
         }
     }
+
+    private void showProgressBar(){
+        progressBar.setVisibility(View.VISIBLE);
+    }
+    private void hideProgressBar(){
+        progressBar.setVisibility(View.GONE);
+    }
+
+    // ----------------------
+    //         TOOLS
+    // ----------------------
 
     private boolean invalidForm() {
         boolean valid = false;
@@ -187,12 +220,12 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         return valid;
     }
 
-    private void showProgressBar(){
-        progressBar.setVisibility(View.VISIBLE);
-    }
-    private void hideProgressBar(){
-        progressBar.setVisibility(View.GONE);
-    }
+
+
+
+    // --------------------------
+    //    CLICKS AND NAVIGATION
+    // --------------------------
 
     private void navigateToMainActivity() {
         startActivity(new Intent(EmailPasswordActivity.this, MainActivity.class));

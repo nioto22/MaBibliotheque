@@ -205,9 +205,9 @@ public class AddLibraryActivity extends AppCompatActivity implements View.OnClic
         new CountDownTimer(5000, 500) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //TODO updateCountDown TextView
+                // UpdateCountDown TextView
                 updateCountDownTextView(millisUntilFinished);
-                //TODO each 500millis viewModel.startCaptureSession
+                // Each 500millis viewModel.startCaptureSession
                 Log.d(TAG, "onTick: millis until finished " + millisUntilFinished);
                 Set<OcrGraphic> graphicsOverlay = graphicOverlay.getGraphics();
                 if (graphicsOverlay.size() != 0){
@@ -218,7 +218,6 @@ public class AddLibraryActivity extends AppCompatActivity implements View.OnClic
             @Override
             public void onFinish() {
 
-                //TODO viewModel.analyzeAllText()
                 viewModel.analyzeAllText();
                 // !freezeCaptureButton()
                 captureButton.setEnabled(true);
