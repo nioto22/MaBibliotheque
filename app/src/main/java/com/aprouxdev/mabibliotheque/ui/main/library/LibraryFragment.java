@@ -107,9 +107,10 @@ public class LibraryFragment extends Fragment
     private List<Integer> recyclerViewCellSize;
     private boolean isListAdapterSelected;
     private SharedPreferences preferences;
-    private int numberOfFilterUsed;
+
     private String firstCategory;
 
+    private int numberOfFilterUsed;
     private String categoryFilterPosition;
     private String readFilterPosition;
     private String markFilterPosition;
@@ -142,6 +143,18 @@ public class LibraryFragment extends Fragment
         if (mainActivity != null) {
             if (mainActivity.bUserUid != null) bUserUid = mainActivity.bUserUid;
             bIsLocalDatabase = mainActivity.bIsUserPrefNoLogin;
+
+            // Get filter from MainActivity
+            if (mainActivity.libraryFragmentReadFilterCalled) {
+                numberOfFilterUsed = 1;
+                readFilterPosition = getResources().getString(R.string.read_filter_read);
+                updateAllData();
+            }
+            if (mainActivity.libraryFragmentFavoriteFilterCalled){
+                numberOfFilterUsed = 1;
+                markFilterPosition = getResources().getString(R.string.mark_favorite_state);
+                updateAllData();
+            }
         }
     }
 

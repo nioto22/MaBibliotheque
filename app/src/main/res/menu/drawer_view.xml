@@ -13,5 +13,8 @@
         <item android:id="@+id/nav_add_library"
             android:title="@string/add_library"
             android:icon="@drawable/ic_add_library"/>
+        <item android:id="@+id/nav_friends"
+            android:title="@string/drawer_nav_my_friends"
+            android:icon="@drawable/ic_friends"/>
     </group>
 </menu>

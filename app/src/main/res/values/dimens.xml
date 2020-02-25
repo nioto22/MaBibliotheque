@@ -13,4 +13,5 @@
     <dimen name="medium_plus_30dp">30dp</dimen>
     <dimen name="text_size_8sp">8sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="top_container_view_height">200dp</dimen>
 </resources>

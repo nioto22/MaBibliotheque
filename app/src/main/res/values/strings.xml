@@ -41,6 +41,7 @@
     <string name="readAndCategoryAllFilter">Tous</string>
     <string name="markAllFilter">Toutes</string>
     <string name="read_filter_read">Lu</string>
+    <string name="mark_favorite_state">5 étoiles</string>
     <!-- ReadSpinner  -->
     <string-array name="read_array">
         <item>Tous</item>
@@ -133,6 +134,10 @@
     <string name="main_activity_delete_account_alert_title">Êtes-vous sûr de vouloir supprimer définitivement votre compte et perdre toute votre bibliothèque ?</string>
     <string name="main_activity_toast_account_deleted">Compte supprimé</string>
     <string name="main_activity_toast_no_account">Aucun compte associé</string>
+    <string name="main_alert_dialog_warning_title">Attention !!</string>
+    <string name="drawer_nav_my_friends">Mes amis</string>
+    <string name="friends_top_container_title">Mes amis</string>
+    <string name="home_friends_fragment_no_friend_text_view">Aucun ami pour l\'instant !</string>
 
 
 </resources>

@@ -42,6 +42,12 @@ public class Constants {
     public static final String SHARED_PREF_NO_LOGIN = "SHARED_PREF_LOGIN";
     public static final String SHARED_USER_UID = "SHARED_USER_UID";
     public static final String SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN = "SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN";
+
+
+    // Friends Activity
+    public static final int FRIENDS_HOME_TAB_TAG = 0;
+    public static final int FRIENDS_FRIENDS_TAB_TAG = 1;
+    public static final int FRIENDS_CHAT_TAB_TAG = 2;
 }
 
 

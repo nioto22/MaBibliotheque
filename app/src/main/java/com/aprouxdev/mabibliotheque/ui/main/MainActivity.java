@@ -14,6 +14,7 @@ import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.addCapturedLibrary.AddLibraryActivity;
 import com.aprouxdev.mabibliotheque.ui.authentication.LoginActivity;
+import com.aprouxdev.mabibliotheque.ui.friends.FriendsActivity;
 import com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.android.material.navigation.NavigationView;
@@ -42,6 +43,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    // DATA VAR
+    public boolean libraryFragmentReadFilterCalled;
+    public boolean libraryFragmentFavoriteFilterCalled;
 
 
     @Override
@@ -96,7 +100,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private void deleteAccountAsked() {
         AlertDialog.Builder alertDeletAccount = new AlertDialog.Builder(this);
-        alertDeletAccount.setTitle("Attention !!")
+        alertDeletAccount.setTitle(getTheString(R.string.main_alert_dialog_warning_title))
                 .setMessage(getTheString(R.string.main_activity_delete_account_alert_title))
                 .setPositiveButton(getTheString(R.string.yes_maj), new DialogInterface.OnClickListener() {
                     @Override
@@ -211,6 +215,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
                 break;
             }
+            case R.id.nav_friends:{
+                startActivity(new Intent(this, FriendsActivity.class));
+            }
         }
         menuItem.setChecked(true);
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -221,16 +228,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         switch (v.getId()){
             case (R.id.topSeeAllButton):
             case (R.id.homeLastEntriesSeeAllButton):
-                Log.d(TAG, "seeAllButtonClicked: ");
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
                 break;
             case (R.id.homeToReadSeeAllButton):
+                libraryFragmentReadFilterCalled = true;
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
-                // TODO intent library with toRead temp filter
                 break;
             case (R.id.homeFavoriteSeeAllButton):
+                libraryFragmentFavoriteFilterCalled = true;
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.libraryScreen);
-                // TODO intent library with favorite temp filter
                 break;
             case (R.id.homeNoBooksAddBookButton):
                 Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.addBookScreen);
