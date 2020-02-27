@@ -19,6 +19,9 @@ public class Constants {
     public static final String BUNDLE_EXTRA_IS_NEW_BOOK = "BUNDLE_EXTRA_IS_NEW_BOOK";
     public static final int ADD_LIBRARY_INTENT_FOR_RESULT = 12 ;
     public static final int ADD_LIBRARY_DRAWER_ITEM_INDEX = 3;
+    public static final String BUNDLE_EXTRA_DISCUSSION_UID = "BUNDLE_EXTRA_DISCUSSION_UID";
+    public static final String BUNDLE_EXTRA_SELECTED_BOOK_ID = "BUNDLE_EXTRA_SELECTED_BOOK_ID";
+    public static final String BUNDLE_EXTRA_SELECTED_BOOK_IMAGE = "BUNDLE_EXTRA_SELECTED_BOOK_IMAGE";
 
 
     // Library data
@@ -48,6 +51,9 @@ public class Constants {
     public static final int FRIENDS_HOME_TAB_TAG = 0;
     public static final int FRIENDS_FRIENDS_TAB_TAG = 1;
     public static final int FRIENDS_CHAT_TAB_TAG = 2;
+
+    // Discussion Activity
+    public static final int RC_CHOOSE_BOOK = 54;
 }
 
 

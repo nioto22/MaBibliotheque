@@ -27,7 +27,7 @@ public class LibraryHelper {
 
     // --- QUERY ---
     public static Query getAllBooks(String uid){
-        return LibraryHelper.getLibraryCollection(uid);
+        return LibraryHelper.getLibraryCollection(uid).orderBy("dateCreated", Query.Direction.DESCENDING);
     }
     public static Query getBooksByCategory(String uid, String category){
         return LibraryHelper.getLibraryCollection(uid)

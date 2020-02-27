@@ -28,8 +28,8 @@ import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
+import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.SelectBookActivity;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
-import com.aprouxdev.mabibliotheque.util.Constants;
 import com.aprouxdev.mabibliotheque.util.Constants.FILTERS;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.firebase.firestore.EventListener;
@@ -52,9 +52,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import static android.app.Activity.RESULT_OK;
 import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.DELETE_BUTTON_CLICKED;
 import static com.aprouxdev.mabibliotheque.ui.adapter.LibraryAdapter.SHARE_BUTTON_CLICKED;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_SELECTED_BOOK_ID;
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_SELECTED_BOOK_IMAGE;
 import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.CATEGORY;
 import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.MARK;
 import static com.aprouxdev.mabibliotheque.util.Constants.FILTERS.READ;
@@ -62,7 +65,9 @@ import static com.aprouxdev.mabibliotheque.util.Constants.MEDIUM_CELL_SIZE;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_VIEW;
 import static com.aprouxdev.mabibliotheque.util.Constants.SMALL_CELL_SIZE;
-import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.*;
+import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.LIST;
+import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.MEDIUM;
+import static com.aprouxdev.mabibliotheque.util.Constants.VIEWS_PREF.SMALL;
 
 public class LibraryFragment extends Fragment
         implements View.OnClickListener,
@@ -378,9 +383,19 @@ public class LibraryFragment extends Fragment
             @Override
             public void onItemClick(int position) {
                 Book selectedBook = libraryAdapter.getBook(position);
-                Intent intent = new Intent(getContext(), BookDetailActivity.class);
-                intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
-                startActivity(intent);
+                // Check if it's LibraryActivity(Main) or SelectedBookActivity
+                Class parentActivityClass = Objects.requireNonNull(getActivity()).getClass();
+                if (parentActivityClass == MainActivity.class) {
+                    Intent intent = new Intent(getContext(), BookDetailActivity.class);
+                    intent.putExtra(BUNDLE_EXTRA_BOOK, selectedBook);
+                    startActivity(intent);
+                } else if (parentActivityClass == SelectBookActivity.class) {
+                    Intent intent = new Intent();
+                    intent.putExtra(BUNDLE_EXTRA_SELECTED_BOOK_ID, selectedBook.getId());
+                    intent.putExtra(BUNDLE_EXTRA_SELECTED_BOOK_IMAGE, selectedBook.getThumbnailLink());
+                    getActivity().setResult(RESULT_OK, intent);
+                }
+
             }
         });
         libraryAdapter.setOnItemLongClickListener(new LibraryAdapter.OnItemLongClickListener() {

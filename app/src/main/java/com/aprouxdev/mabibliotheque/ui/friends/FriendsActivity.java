@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
-import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.chat.ChatFragment;
 import com.aprouxdev.mabibliotheque.ui.friends.friends.FriendsFragment;
 import com.aprouxdev.mabibliotheque.ui.friends.home.FriendsHomeFragment;
@@ -81,12 +80,6 @@ public class FriendsActivity extends BaseActivity implements View.OnClickListene
         return (R.layout.activity_friends);
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
 
 
     // ------------------------
@@ -131,55 +124,48 @@ public class FriendsActivity extends BaseActivity implements View.OnClickListene
      * @param tag int Tag of the tab clicked
      */
     private void tabButtonClicked(int tag) {
-
-        // 1 get the previous tab
-        ImageView previousTabImage = currentTab == 0 ? friendsTabHomeIV : currentTab == 1 ? friendsTabFriendsIV : friendsTabChatIV;
-        View stroke = friendsTabStrokeView;
-        // 2 get the clicked tab
-        ImageView newTabImage = tag == 0 ? friendsTabHomeIV : tag == 1 ? friendsTabFriendsIV : friendsTabChatIV;
-
-        // 3 is a new tab clicked
         if (tag != currentTab){
-            // 4 ImageViews change drawable
-            TransitionDrawable transitionPreviousTab = (TransitionDrawable) previousTabImage.getBackground();
-            TransitionDrawable transitionNewTab = (TransitionDrawable) newTabImage.getBackground();
-            transitionPreviousTab.reverseTransition(500);
-            transitionNewTab.reverseTransition(500);
 
-            // 5 Set stroke direction way
-            int enterTransition = (tag < currentTab) ? R.anim.enter_from_right : R.anim.enter_from_left;
-            int exitTransition = (tag < currentTab) ? R.anim.exit_to_left : R.anim.exit_to_right;
-//                    FriendsHomeFragment homeFragment = new FriendsHomeFragment();
-//            fragmentTransaction.add(R.id.friendsFragment, homeFragment);
-//            fragmentTransaction.commit();
+            ImageView previousTabImage = getImageFromTag(currentTab);
+            ImageView newTabImage = getImageFromTag(tag);
 
-            // 6 Stroke animation
-            int translationX = tag * stroke.getWidth();
-            Log.d(TAG, "tabButtonClicked: translation = " + translationX);
-            stroke.animate()
-                    .translationX(translationX)
-                    .setDuration(500);
-            // 7 change fragment
-            Fragment newFragment = tag == 0 ? new FriendsHomeFragment() : tag == 1 ? new FriendsFragment() : new ChatFragment();
-            fragmentTransaction = fragmentManager.beginTransaction();
-            // Custom transition animations
-            fragmentTransaction.setCustomAnimations(enterTransition,exitTransition);   // R.anim.enter_from_right, R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right
-            fragmentTransaction.replace(R.id.friendsFragment, newFragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
+            tabDrawableTransition(previousTabImage);
+            tabDrawableTransition(newTabImage);
 
-            // 7 update current tab
+            animateTabUnderline(tag);
+
+            changeFragment(tag);
+
             currentTab = tag;
-
         }
+    }
 
+    private void changeFragment(int tag) {
+        Fragment newFragment = tag == 0 ? new FriendsHomeFragment() : tag == 1 ? new FriendsFragment() : new ChatFragment();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        // Set fragment direction way
+        int enterTransition = (tag < currentTab) ? R.anim.enter_from_right : R.anim.enter_from_left;
+        int exitTransition = (tag < currentTab) ? R.anim.exit_to_left : R.anim.exit_to_right;
+        // Custom transition animations
+        fragmentTransaction.setCustomAnimations(enterTransition,exitTransition);
+        fragmentTransaction.replace(R.id.friendsFragment, newFragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
+    private void animateTabUnderline(int tag) {
+        int translationX = tag * friendsTabStrokeView.getWidth();
+        friendsTabStrokeView.animate()
+                .translationX(translationX)
+                .setDuration(500);
+    }
 
-
-        // 4 change drawables and start animation
-
-        // 5 change fragment
-
+    private ImageView getImageFromTag(int tag){
+        return (tag == 0) ? friendsTabHomeIV : tag == 1 ? friendsTabFriendsIV : friendsTabChatIV;
+    }
+    private void tabDrawableTransition(ImageView image){
+        TransitionDrawable transitionTab = (TransitionDrawable) image.getBackground();
+        transitionTab.reverseTransition(500);
 
     }
 

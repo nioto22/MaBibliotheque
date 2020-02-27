@@ -1,6 +1,7 @@
 package com.aprouxdev.mabibliotheque.ui.authentication;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,45 +12,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
-import com.aprouxdev.mabibliotheque.base.BaseActivity;
-import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
-import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
-import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
-import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class EmailPasswordActivity extends BaseActivity implements View.OnClickListener {
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NO_LOGIN;
+
+public class EmailPasswordActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPasswordActivity";
 
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView statusTextView;
     private ProgressBar progressBar;
+    private FirebaseAuth mAuth;
+    private SharedPreferences preferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_email_password);
+        setupData();
         setupViews();
         setupButtons();
     }
 
-    @Override
-    public int getFragmentLayout() {
-        return (R.layout.activity_email_password);
+    private void setupData() {
+        mAuth = FirebaseAuth.getInstance();
+        preferences = getSharedPreferences(SHARED_PREF_NAME, MODE_PRIVATE);
     }
+
 
     // ----------------------
     //         SETUP
@@ -77,14 +81,14 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         if (invalidForm()) return;
         showProgressBar();
 
-        bAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            addUserToFirestore();
+                            addUserToFirestore(email);
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             // Catch Firebase exception
@@ -111,14 +115,14 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         resetStatusTextView();
         if (invalidForm()) return;
         showProgressBar();
-        bAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            addUserToFirestore();
+                            addUserToFirestore(email);
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_sign_in_failure),
@@ -139,7 +143,7 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
             emailEditText.setError(getTheString(R.string.email_login_activity_required_error));
         } else {
             emailEditText.setError(null);
-            bAuth.sendPasswordResetEmail(email)
+            mAuth.sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -161,16 +165,17 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
      * Add user into firebase with UserHelper createUser method
      * On complete go back to MainActivity
      */
-    private void addUserToFirestore() {
-        UserHelper.createUser(bUserUid, bIsUserPrefNoLogin).addOnCompleteListener(new OnCompleteListener<Void>() {
+    private void addUserToFirestore(String email) {
+        String mUserUid = mAuth.getUid();
+        UserHelper.createUser(mUserUid, true, email).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-               if (task.isSuccessful()){
-                   hideProgressBar();
-                  navigateToMainActivity();
-               } else {
-                   Log.w(TAG, "Create User task not successful: ", task.getException());
-               }
+                if (task.isSuccessful()){
+                    hideProgressBar();
+                    navigateToMainActivity();
+                } else {
+                    Log.w(TAG, "Create User task not successful: ", task.getException());
+                }
             }
         });
     }
@@ -220,7 +225,9 @@ public class EmailPasswordActivity extends BaseActivity implements View.OnClickL
         return valid;
     }
 
-
+    private String getTheString(int resource){
+        return getResources().getString(resource);
+    }
 
 
     // --------------------------

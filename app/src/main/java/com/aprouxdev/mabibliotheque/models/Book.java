@@ -1,11 +1,14 @@
 package com.aprouxdev.mabibliotheque.models;
 
 import com.aprouxdev.mabibliotheque.database.localDatabase.MetaData;
+import com.google.firebase.firestore.ServerTimestamp;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = MetaData.bookTableName)
@@ -25,13 +28,15 @@ public class Book implements Serializable, Cloneable {
     private String loan;
     private String saveTimestamp;
     private String readTimestamp;
+    @Ignore
+    private Date dateCreated;
 
     public Book() {
     }
 
     public Book(@NonNull String id, String title, String author, String thumbnailLink,
                 String description, String category, int pageCount, Boolean hasBeenRead, int mark,
-                String comment, String loan, String saveTimestamp, String readTimestamp) {
+                String comment, String loan, String readTimestamp) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -43,7 +48,7 @@ public class Book implements Serializable, Cloneable {
         this.mark = mark;
         this.comment = comment;
         this.loan = loan;
-        this.saveTimestamp = saveTimestamp;
+        this.saveTimestamp = this.dateCreated.toString();
         this.readTimestamp = readTimestamp;
     }
 
@@ -55,6 +60,8 @@ public class Book implements Serializable, Cloneable {
         return title;
     }
     public String getAuthor() { return author; }
+    @ServerTimestamp
+    public Date getDateCreated() { return dateCreated; }
 
     // API INFORMATION
     public String getThumbnailLink() {
@@ -97,6 +104,7 @@ public class Book implements Serializable, Cloneable {
     public void setLoan(String loan) { this.loan = loan; }
     public void setSaveTimestamp(String saveTimestamp) { this.saveTimestamp = saveTimestamp; }
     public void setReadTimestamp(String readTimestamp) { this.readTimestamp = readTimestamp; }
+    public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
     // Methods
 

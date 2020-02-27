@@ -18,8 +18,8 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, Boolean isSignedInUser) {
-        User userToCreate = new User(uid, isSignedInUser);
+    public static Task<Void> createUser(String uid, Boolean isSignedInUser, String email) {
+        User userToCreate = new User(uid, isSignedInUser, email);
         return UserHelper.getUsersCollection().document(uid).set(userToCreate);
     }
 

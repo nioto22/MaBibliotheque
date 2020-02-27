@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.DiscussionActivity">
+
+   
+    <!-- RECYCLER VIEW CONTAINER -->
+    <LinearLayout
+        android:id="@+id/activity_discussion_recycler_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@id/activity_discussion_add_message_container"
+        android:layout_alignParentTop="true">
+
+        <!-- MESSAGE RECYCLER VIEW EMPTY -->
+        <TextView
+            android:id="@+id/activity_discussion_text_view_recycler_view_empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/text_view_discussion_error"
+            android:textAlignment="center"
+            android:layout_margin="@dimen/large_20dp"/>
+
+        <!-- RECYCLER VIEW -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/activity_discussion_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <!-- IMAGE CHOSEN PREVIEW -->
+    <ImageView
+        android:id="@+id/activity_discussion_image_chosen_preview"
+        android:layout_width="60dip"
+        android:layout_height="85dip"
+        android:layout_margin="@dimen/normal_10dp"
+        android:layout_above="@id/activity_discussion_add_message_container"/>
+
+    <!-- ADD MESSAGE CONTAINER -->
+    <LinearLayout
+        android:id="@+id/activity_discussion_add_message_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/normal_10dp">
+
+        <!-- ADD FILE BUTTON -->
+        <ImageButton
+            android:id="@+id/activity_discussion_add_book_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_add_turquoise"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
+
+        <!-- TEXT MESSAGE EDIT TEXT -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/activity_discussion_message_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:textSize="13sp"
+            android:hint="@string/text_input_title_discussion_activity"/>
+
+        <!-- ADD MESSAGE BUTTON -->
+        <Button
+            android:id="@+id/activity_discussion_send_button"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_title_discussion_activity" />
+
+    </LinearLayout>
+
+</RelativeLayout>

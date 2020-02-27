@@ -25,7 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
-import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
@@ -41,7 +41,6 @@ import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -191,6 +190,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         setupBookSecondaryInformation();
         setupBookDescription();
         setupBookComments();
+        book.getId();
     }
 
     private  void setupBookPrimaryInformation() {
@@ -308,11 +308,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
 
 
-    private void setupActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
+
 
     private void setupMarkStarsDrawable(int numberOfStars) {
         List<ImageView> markStars = Arrays.asList(star1, star2, star3, star4, star5);

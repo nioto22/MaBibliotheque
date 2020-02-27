@@ -1,15 +1,17 @@
-package com.aprouxdev.mabibliotheque.base;
+package com.aprouxdev.mabibliotheque.ui.base;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Toast;
 
+import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
 import com.aprouxdev.mabibliotheque.ui.authentication.LoginActivity;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -112,8 +115,30 @@ public abstract class BaseActivity extends AppCompatActivity {
         addBooksInFirestore(0, books);
     }
 
+    // TOOLS
 
     protected String getTheString(int resource){
         return getResources().getString(resource);
+    }
+
+    // UI
+
+    protected void setupActionBar() {
+        ActionBar actionBar = this.getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    // --------------------
+    // ERROR HANDLER
+    // --------------------
+
+    protected OnFailureListener onFailureListener(){
+        return new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_unknown_error), Toast.LENGTH_LONG).show();
+            }
+        };
     }
 }

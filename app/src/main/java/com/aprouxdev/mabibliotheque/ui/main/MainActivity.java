@@ -11,12 +11,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
-import com.aprouxdev.mabibliotheque.base.BaseActivity;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
 import com.aprouxdev.mabibliotheque.ui.addCapturedLibrary.AddLibraryActivity;
 import com.aprouxdev.mabibliotheque.ui.authentication.LoginActivity;
+import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.FriendsActivity;
-import com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment;
-import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
@@ -59,7 +59,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         initNavigation();
 
 
-        
     }
 
 
@@ -122,8 +121,18 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         bUser.delete()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        Toast.makeText(this, getTheString(R.string.main_activity_toast_account_deleted), Toast.LENGTH_SHORT).show();
-                        goToLoginActivity();
+                        UserHelper.deleteUser(bUserUid).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(MainActivity.this, getTheString(R.string.main_activity_toast_account_deleted), Toast.LENGTH_SHORT).show();
+                                    goToLoginActivity();
+                                } else {
+                                    Toast.makeText(MainActivity.this, getTheString(R.string.toast_failure_try_again), Toast.LENGTH_SHORT).show();
+                                    Log.w(TAG, "deleteFirebaseAccount: ", task.getException());
+                                }
+                            }
+                        });
                     } else {
                         Toast.makeText(this, getTheString(R.string.toast_failure_try_again), Toast.LENGTH_SHORT).show();
                         Log.w(TAG, "deleteFirebaseAccount: ", task.getException());

@@ -11,14 +11,16 @@ public class User {
     @Nullable
     private String username;
     private Boolean isSignedInUser;
+    private String email;
     @Nullable
     private String urlPicture;
     private List<String> friends;
 
     public User() { }
 
-    public User(String uid, Boolean isSignedInUser) {
+    public User(String uid, Boolean isSignedInUser, String email) {
         this.uid = uid;
+        this.email = email;
         this.username = null;
         this.urlPicture = null;
         this.isSignedInUser = isSignedInUser;
@@ -27,6 +29,7 @@ public class User {
 
     // --- GETTERS ---
     public String getUid() { return uid; }
+    public String getEmail() { return email; }
     @Nullable
     public String getUsername() { return username; }
     @Nullable
@@ -39,6 +42,7 @@ public class User {
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
     public void setUid(String uid) { this.uid = uid; }
+    public void setEmail(String email) {this.email = email; }
     public void setUrlPicture(String urlPicture) { this.urlPicture = urlPicture; }
     public void setIsSignedInUser(Boolean isSignedInUser) { this.isSignedInUser = isSignedInUser; }
 
