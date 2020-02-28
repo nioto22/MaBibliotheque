@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,12 +53,12 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.BookView
         View itemView;
         if (isListViewAdaptor){
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_list_item_book, parent, false);
+                    .inflate(R.layout.item_recyclerview_list_book, parent, false);
             width = 128;
             height = 200;
         } else {
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recyclerview_item_book, parent, false);
+                    .inflate(R.layout.item_recyclerview_book, parent, false);
             width = parent.getMeasuredWidth() / cell_size.get(0);
             height = parent.getMeasuredHeight() / cell_size.get(1);
         }

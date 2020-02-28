@@ -35,7 +35,7 @@
 
 
     <com.google.android.material.navigation.NavigationView
-        app:headerLayout="@layout/drawer_header"
+        app:headerLayout="@layout/background_drawer_header"
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

@@ -1,13 +1,10 @@
 package com.aprouxdev.mabibliotheque.ui.adapter;
 
-import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
@@ -36,7 +33,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recyclerview_item_book, parent, false);
+                .inflate(R.layout.item_recyclerview_book, parent, false);
         return new BookViewHolder(itemView, mListener);
     }
 

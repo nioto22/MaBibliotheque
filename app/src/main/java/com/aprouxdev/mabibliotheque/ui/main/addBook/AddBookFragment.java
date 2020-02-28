@@ -51,7 +51,7 @@ public class AddBookFragment extends Fragment implements View.OnClickListener{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.add_book_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_add_book, container, false);
     }
 
     @Override

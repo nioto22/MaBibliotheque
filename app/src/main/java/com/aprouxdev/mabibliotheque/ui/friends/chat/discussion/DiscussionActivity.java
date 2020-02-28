@@ -22,7 +22,7 @@ import com.aprouxdev.mabibliotheque.models.Message;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.tools.general.Tools;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
-import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter.DiscussionAdapter;
+import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter.MessagesAdapter;
 import com.aprouxdev.mabibliotheque.util.Constants;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -34,10 +34,10 @@ import com.google.firebase.firestore.Query;
 
 import static com.aprouxdev.mabibliotheque.util.Constants.RC_CHOOSE_BOOK;
 
-public class DiscussionActivity extends BaseActivity implements DiscussionAdapter.Listener, View.OnClickListener {
+public class DiscussionActivity extends BaseActivity implements MessagesAdapter.Listener, View.OnClickListener {
 
     // UI vars
-     RecyclerView recyclerView;
+    RecyclerView recyclerView;
     TextView textViewRecyclerViewEmpty;
     TextInputEditText editTextMessage;
     ImageView bookImagePreview;
@@ -45,7 +45,7 @@ public class DiscussionActivity extends BaseActivity implements DiscussionAdapte
     Button sendButton;
 
     // FOR DATA
-    private DiscussionAdapter discussionAdapter;
+    private MessagesAdapter messagesAdapter;
     @Nullable
     private User modelCurrentUser;
     private String discussionUid;
@@ -142,15 +142,18 @@ public class DiscussionActivity extends BaseActivity implements DiscussionAdapte
         this.discussionUid = discussionUid;
 
         //Configure Adapter & RecyclerView
-        this.discussionAdapter = new DiscussionAdapter(generateOptionsForAdapter(DiscussionHelper.getAllMessagesForDiscussion(this.discussionUid)), Glide.with(this), this, this.bUserUid);
-        discussionAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        this.messagesAdapter = new MessagesAdapter(generateOptionsForAdapter(DiscussionHelper.getAllMessagesForDiscussion(this.discussionUid)),
+                Glide.with(this),
+                this,
+                this.bUserUid);
+        messagesAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                recyclerView.smoothScrollToPosition(discussionAdapter.getItemCount()); // Scroll to bottom on new messages
+                recyclerView.smoothScrollToPosition(messagesAdapter.getItemCount()); // Scroll to bottom on new messages
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(this.discussionAdapter);
+        recyclerView.setAdapter(this.messagesAdapter);
     }
 
     private FirestoreRecyclerOptions<Message> generateOptionsForAdapter(Query query){
@@ -196,7 +199,7 @@ public class DiscussionActivity extends BaseActivity implements DiscussionAdapte
 
     @Override
     public void onDataChanged() {
-        textViewRecyclerViewEmpty.setVisibility(this.discussionAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        textViewRecyclerViewEmpty.setVisibility(this.messagesAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     // --------------------

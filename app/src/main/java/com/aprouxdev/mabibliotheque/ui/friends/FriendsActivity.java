@@ -144,8 +144,8 @@ public class FriendsActivity extends BaseActivity implements View.OnClickListene
         Fragment newFragment = tag == 0 ? new FriendsHomeFragment() : tag == 1 ? new FriendsFragment() : new ChatFragment();
         fragmentTransaction = fragmentManager.beginTransaction();
         // Set fragment direction way
-        int enterTransition = (tag < currentTab) ? R.anim.enter_from_right : R.anim.enter_from_left;
-        int exitTransition = (tag < currentTab) ? R.anim.exit_to_left : R.anim.exit_to_right;
+        int enterTransition = (tag < currentTab) ? R.anim.enter_from_left : R.anim.enter_from_right;
+        int exitTransition = (tag < currentTab) ? R.anim.exit_to_right : R.anim.exit_to_left;
         // Custom transition animations
         fragmentTransaction.setCustomAnimations(enterTransition,exitTransition);
         fragmentTransaction.replace(R.id.friendsFragment, newFragment);

@@ -1,7 +1,6 @@
 package com.aprouxdev.mabibliotheque.ui.main.home;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,8 +33,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.aprouxdev.mabibliotheque.ui.main.MainActivity.BUNDLE_IS_USER_PREF_NO_LOGIN;
-import static com.aprouxdev.mabibliotheque.ui.main.MainActivity.BUNDLE_USER_UID;
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_BOOK;
 
 public class HomeFragment extends Fragment
@@ -86,7 +83,7 @@ public class HomeFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.home_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override

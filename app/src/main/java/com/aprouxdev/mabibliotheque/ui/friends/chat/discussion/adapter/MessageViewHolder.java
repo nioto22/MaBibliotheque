@@ -12,7 +12,6 @@ import com.aprouxdev.mabibliotheque.models.Message;
 import com.aprouxdev.mabibliotheque.tools.general.Tools;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
-import com.squareup.picasso.Picasso;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -54,7 +53,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
 
         // Update date TextView
         if (message.getDateCreated() != null) this.textViewDate.setText(Tools.convertDateToHour(message.getDateCreated()));
-        
+
         // Update profile picture ImageView
         if (message.getUserSender().getUrlPicture() != null)
             glide.load(message.getUserSender().getUrlPicture())

@@ -10,7 +10,7 @@
         android:id="@+id/homeScreen"
         android:name="com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment"
         android:label="@string/home"
-        tools:layout="@layout/home_fragment">
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeScreen_to_libraryScreen2"
             app:destination="@id/libraryScreen" />
@@ -20,13 +20,13 @@
         android:id="@+id/libraryScreen"
         android:name="com.aprouxdev.mabibliotheque.ui.main.library.LibraryFragment"
         android:label="@string/library"
-        tools:layout="@layout/library_fragment"/>
+        tools:layout="@layout/fragment_library"/>
 
     <fragment
         android:id="@+id/addBookScreen"
         android:name="com.aprouxdev.mabibliotheque.ui.main.addBook.AddBookFragment"
         android:label="@string/add_book"
-        tools:layout="@layout/add_book_fragment"/>
+        tools:layout="@layout/fragment_add_book"/>
     
 
 

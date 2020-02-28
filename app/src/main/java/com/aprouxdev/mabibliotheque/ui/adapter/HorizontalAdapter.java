@@ -8,7 +8,6 @@ import android.widget.ImageView;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Book;
-import com.aprouxdev.mabibliotheque.ui.main.home.HomeFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class HorizontalAdapter extends RecyclerView.Adapter<HorizontalAdapter.Bo
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.horizontal_recyclerview_item_book, parent, false);
+                .inflate(R.layout.item_horizontal_recyclerview_book, parent, false);
         return new BookViewHolder(itemView, mListener);
     }
 

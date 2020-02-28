@@ -14,4 +14,5 @@
     <dimen name="text_size_8sp">8sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
     <dimen name="top_container_view_height">200dp</dimen>
+    <dimen name="floating_button_margin_16dp">16dp</dimen>
 </resources>

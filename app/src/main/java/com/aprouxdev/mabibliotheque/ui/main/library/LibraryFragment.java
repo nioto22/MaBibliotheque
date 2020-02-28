@@ -127,7 +127,7 @@ public class LibraryFragment extends Fragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.library_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_library, container, false);
     }
 
     @Override
@@ -328,25 +328,25 @@ public class LibraryFragment extends Fragment
 
     private void setupCategorySpinnerView() {
         // INFO : setupCategorySpinnerView is in onChanged of observer
-        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), R.layout.custom_spinner_simple_item,
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), R.layout.item_custom_spinner_simple,
                 categoryArray);
-        categoryAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        categoryAdapter.setDropDownViewResource(R.layout.item_custom_spinner_dropdown);
         filterLayoutCategorySpinner.setAdapter(categoryAdapter);
     }
 
     private void setupReadFilterSpinnerView() {
         ArrayAdapter<CharSequence> readAdapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),
-                R.array.read_array, R.layout.custom_spinner_simple_item);
+                R.array.read_array, R.layout.item_custom_spinner_simple);
         // Specify the layout to use when the list of choices appears
-        readAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+        readAdapter.setDropDownViewResource(R.layout.item_custom_spinner_dropdown);
 // Apply the adapter to the spinner
         filterLayoutReadSpinner.setAdapter(readAdapter);
     }
 
     private void setupMarkFilterSpinnerView() {
         ArrayAdapter<CharSequence> markAdapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),
-                R.array.mark_array, R.layout.custom_mark_spinner_simple_item);
-        markAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+                R.array.mark_array, R.layout.item_custom_mark_spinner_simple);
+        markAdapter.setDropDownViewResource(R.layout.item_custom_spinner_dropdown);
         filterLayoutMarkSpinner.setAdapter(markAdapter);
     }
 

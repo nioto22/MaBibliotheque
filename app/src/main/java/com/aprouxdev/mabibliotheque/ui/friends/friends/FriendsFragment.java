@@ -25,7 +25,7 @@ public class FriendsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.friends_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
     @Override

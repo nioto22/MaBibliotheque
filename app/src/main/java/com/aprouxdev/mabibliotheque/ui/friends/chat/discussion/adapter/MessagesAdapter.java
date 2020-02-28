@@ -11,7 +11,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import androidx.annotation.NonNull;
 
-public class DiscussionAdapter extends FirestoreRecyclerAdapter<Message, MessageViewHolder> {
+public class MessagesAdapter extends FirestoreRecyclerAdapter<Message, MessageViewHolder> {
 
     public interface Listener {
         void onDataChanged();
@@ -24,7 +24,7 @@ public class DiscussionAdapter extends FirestoreRecyclerAdapter<Message, Message
     //FOR COMMUNICATION
     private Listener callback;
 
-    public DiscussionAdapter(@NonNull FirestoreRecyclerOptions<Message> options, RequestManager glide, Listener callback, String idCurrentUser) {
+    public MessagesAdapter(@NonNull FirestoreRecyclerOptions<Message> options, RequestManager glide, Listener callback, String idCurrentUser) {
         super(options);
         this.glide = glide;
         this.callback = callback;
@@ -39,7 +39,7 @@ public class DiscussionAdapter extends FirestoreRecyclerAdapter<Message, Message
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new MessageViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.discussion_item, parent, false));
+                .inflate(R.layout.item_message, parent, false));
     }
 
     @Override

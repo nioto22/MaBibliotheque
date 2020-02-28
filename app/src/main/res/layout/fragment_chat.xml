@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.friends.chat.ChatFragment"
+    android:background="@color/background_third_taupe">
+
+    <TextView
+        android:id="@+id/chatFragmentDiscussionTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:text="@string/fragment_chat_discussion_title"
+        android:textColor="@color/text_primary_black"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_margin="@dimen/medium_12dp"/>
+    <TextView
+        android:id="@+id/chatFragmentNoDiscussionTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatFragmentDiscussionTitle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/text_primary_black"
+        android:gravity="center"
+        android:text="@string/fragment_chat_no_discussion"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatFragmentDiscussionRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/chatFragmentDiscussionTitle"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:padding="@dimen/small_8dp"
+        android:background="@color/background_third_taupe"
+        android:visibility="gone"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/chatFragmentAddDiscussionFloatingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/floating_button_margin_16dp"
+        android:src="@drawable/ic_add_taupe"/>
+
+
+</RelativeLayout>
