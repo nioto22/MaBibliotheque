@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter;
+package com.aprouxdev.mabibliotheque.ui.adapters.ViewHolders;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;

@@ -1,10 +1,11 @@
-package com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter;
+package com.aprouxdev.mabibliotheque.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.models.Message;
+import com.aprouxdev.mabibliotheque.ui.adapters.ViewHolders.MessageViewHolder;
 import com.bumptech.glide.RequestManager;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;

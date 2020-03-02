@@ -5,10 +5,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
+    private static final String FRIENDS_COLLECTION_NAME = "friends";
+    private static final String DISCUSSIONS_COLLECTION_NAME = "discussions";
 
     // --- COLLECTION REFERENCE ---
 
@@ -28,6 +31,20 @@ public class UserHelper {
     public static Task<DocumentSnapshot> getUser(String uid){
         return UserHelper.getUsersCollection().document(uid).get();
     }
+
+    public static CollectionReference getAllDiscussionsForUser(String userUid){
+        return UserHelper.getUsersCollection()
+                .document(userUid)
+                .collection(DISCUSSIONS_COLLECTION_NAME);
+    }
+
+    public static CollectionReference getAllFriendsForUser(String userUid){
+        return UserHelper.getUsersCollection()
+                .document(userUid)
+                .collection(FRIENDS_COLLECTION_NAME);
+    }
+
+
 
     // --- UPDATE ---
 

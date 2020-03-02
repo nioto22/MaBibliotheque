@@ -15,6 +15,7 @@ public class User {
     @Nullable
     private String urlPicture;
     private List<String> friends;
+    private List<String> discussions;
 
     public User() { }
 
@@ -25,6 +26,7 @@ public class User {
         this.urlPicture = null;
         this.isSignedInUser = isSignedInUser;
         this.friends = new ArrayList<>();
+        this.discussions = new ArrayList<>();
     }
 
     // --- GETTERS ---
@@ -38,6 +40,9 @@ public class User {
     public List<String> getFriends() {
         return friends;
     }
+    public List<String> getDiscussions() {
+        return discussions;
+    }
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
@@ -49,5 +54,6 @@ public class User {
     public void setFriends(List<String> friends) {
         this.friends = friends;
     }
+    public void setDiscussions(List<String> discussions) { this.discussions = discussions; }
 }
 

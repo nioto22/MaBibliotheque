@@ -1,14 +1,7 @@
 package com.aprouxdev.mabibliotheque.ui.friends.chat;
 
-import androidx.lifecycle.ViewModelProviders;
-
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +14,29 @@ import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
 import com.aprouxdev.mabibliotheque.models.Discussion;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.ui.friends.FriendsActivity;
-import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter.DiscussionsAdapter;
+import com.aprouxdev.mabibliotheque.ui.friends.chat.addDiscussion.AddDiscussionActivity;
+import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.DiscussionActivity;
+import com.aprouxdev.mabibliotheque.ui.adapters.DiscussionsAdapter;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_DISCUSSION_UID;
 
 public class ChatFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "ChatFragment";
@@ -45,7 +50,6 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     private ChatViewModel mViewModel;
     private String bUserUid;
     private boolean isUserHaveFriend;
-    private List<Discussion> userDiscussions;
 
     public static ChatFragment newInstance() {
         return new ChatFragment();
@@ -69,11 +73,18 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
         getBasedVars();
         setupViews(view);
-        getAllUserDiscussionsInRecyclerView();
+        //getAllUserDiscussionsInRecyclerView();
+        subscribesListeners();
     }
 
-
-
+    private void subscribesListeners() {
+        UserHelper.getAllDiscussionsForUser(bUserUid).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                getAllUserDiscussionsInRecyclerView();
+            }
+        });
+    }
 
 
     // ------------------------
@@ -91,7 +102,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
 
 
     private void getAllUserDiscussionsInRecyclerView() {
-        // Get the user and his discussions list
+        // Get the user and his discussionsUid list
         UserHelper.getUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -103,33 +114,51 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
                         final List<String> userDiscussions = currentUser.getDiscussions();
                         Log.d(TAG, "onComplete: user discussions string list size = " + userDiscussions.size());
                         if (userDiscussions.size() > 0) {
-                            final List<Discussion> discussionsList = new ArrayList<>();
-                            // getAllDiscussions
-                            DiscussionHelper.getDiscussionsCollection().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful() && task.getResult() != null){
-                                        Log.d(TAG, "onComplete: get All discussions : number of total discussion = " + task.getResult().size());
-                                        for(QueryDocumentSnapshot document : task.getResult()){
-                                            final Discussion discussion = document.toObject(Discussion.class);
-                                            if (userDiscussions.contains(discussion.getUid())){
-                                                discussionsList.add(discussion);
-                                            }
-                                        }
-                                        Log.d(TAG, "onComplete: get all user discussions : number = " + discussionsList.size());
-
-                                        discussionsAdapter = new DiscussionsAdapter(discussionsList, Glide.with(ChatFragment.this));
-                                        discussionsRecyclerView.setAdapter(discussionsAdapter);
-                                        discussionsAdapter.notifyDataSetChanged();
-                                        Log.d(TAG, "onComplete: Recycler view updated");
-                                        discussionsRecyclerView.setVisibility(View.VISIBLE);
-                                        noDiscussion.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
+                            getAllUserDiscussions(userDiscussions);
                         }
                     }
                 }
+            }
+
+            // Get all user discussions
+            private void getAllUserDiscussions(List<String> userDiscussions) {
+                final List<Discussion> discussionsList = new ArrayList<>();
+                DiscussionHelper.getDiscussionsCollection().get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && task.getResult() != null){
+                            Log.d(TAG, "onComplete: get All discussions : number of total discussion = " + task.getResult().size());
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                final Discussion discussion = document.toObject(Discussion.class);
+                                if (userDiscussions.contains(discussion.getUid())){
+                                    discussionsList.add(discussion);
+                                }
+
+                            }
+                            Log.d(TAG, "onComplete: get all user discussions : number = " + discussionsList.size());
+                            setupRecyclerView();
+                        }
+                    }
+
+                    private void setupRecyclerView() {
+                        discussionsAdapter = new DiscussionsAdapter(discussionsList, Glide.with(ChatFragment.this));
+                        discussionsRecyclerView.setAdapter(discussionsAdapter);
+                        discussionsAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "onComplete: Recycler view updated");
+                        discussionsRecyclerView.setVisibility(View.VISIBLE);
+                        noDiscussion.setVisibility(View.GONE);
+
+                        discussionsAdapter.setOnItemClickListener(new DiscussionsAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                String discussionUid = discussionsList.get(position).getUid();
+                                Intent intent = new Intent(getActivity(), DiscussionActivity.class);
+                                intent.putExtra(BUNDLE_EXTRA_DISCUSSION_UID, discussionUid);
+                                startActivity(intent);
+                            }
+                        });
+                    }
+                });
             }
         });
     }
@@ -150,10 +179,7 @@ public class ChatFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == (R.id.chatFragmentAddDiscussionFloatingButton)){
-            // check if user have no friend
-            Log.d(TAG, "onClick: isUserHaveFriend : " + isUserHaveFriend);
-            // alertDialog No friend add a friend or cancel
-            // else addDiscussionActivity
+            startActivity(new Intent(getActivity(), AddDiscussionActivity.class));
         }
     }
 

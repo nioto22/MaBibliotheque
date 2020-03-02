@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.ui.adapter;
+package com.aprouxdev.mabibliotheque.ui.adapters;
 
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -105,8 +105,5 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
            });
 
        }
-
-
-
    }
 }

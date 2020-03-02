@@ -4,6 +4,7 @@
     <string name="home">Accueil</string>
     <string name="ok">OK</string>
 
+    <!-- WARNING CHANGE YESTERDAY STRING IN CONSTANTS CLASS FUNCTION OF LANGUAGES -->
 
     <!-- AddBookFragment -->
     <string name="add_book">Ajouter un livre</string>
@@ -147,5 +148,14 @@
     <string name="text_view_discussion_error">Ce fil de discussion ne contient pour le moment aucun message&#8230;</string>
     <string name="popup_title_permission_files_access">Cette application a besoin de permission pour fonctionner.</string>
     <string name="toast_title_no_book_chosen">Aucun livre choisi&#8230;</string>
+    <string name="fragment_chat_no_discussion">Aucune discussion en cours !!</string>
+    <string name="fragment_chat_discussion_title">Mes discussions :</string>
+    <string name="friends_fragment_no_friends">Aucun ami pour le moment !!</string>
+    <string name="friends_fragment_friends_title">Mes amis :</string>
+    <string name="add_discussion_activity_no_friends_text">Pour demarrer une discussion, vous devez dans un premier temps ajouter des amis :</string>
+    <string name="add_discussion_add_friends_button_text">Ajouter des amis</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

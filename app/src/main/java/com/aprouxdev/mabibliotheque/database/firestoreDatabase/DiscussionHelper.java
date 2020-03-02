@@ -13,6 +13,8 @@ public class DiscussionHelper {
     
     public static final String DISCUSSIONS_COLLECTION_NAME = "discussions";
     public static final String MESSAGES_COLLECTION_NAME = "messages";
+    public static final String DISCUSSION_NUMBER_OF_USERS = "numberOfUsers";
+    public static final String DISCUSSION_USERS_UID = "usersUid";
 
 
     // --- COLLECTION REFERENCE ---
@@ -40,6 +42,17 @@ public class DiscussionHelper {
                 .collection(MESSAGES_COLLECTION_NAME)
                 .orderBy("dateCreated")
                 .limit(50);
+    }
+
+    public static Query getAllDiscussionsWithTwoUsers(){
+        return DiscussionHelper.getDiscussionsCollection()
+                .whereEqualTo(DISCUSSION_NUMBER_OF_USERS, 2);
+    }
+
+    public static Query getAllDiscussionsWithTheseOnlyTwoUsers(String user1Uid, String users2Uid){
+        return DiscussionHelper.getAllDiscussionsWithTwoUsers()
+                .whereArrayContains(DISCUSSION_USERS_UID, user1Uid)
+                .whereArrayContains(DISCUSSION_USERS_UID, users2Uid);
     }
 
     // --- UPDATE ---

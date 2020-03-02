@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.LibraryHelper;
 import com.aprouxdev.mabibliotheque.models.Book;
-import com.aprouxdev.mabibliotheque.ui.adapter.HorizontalAdapter;
+import com.aprouxdev.mabibliotheque.ui.adapters.HorizontalAdapter;
 import com.aprouxdev.mabibliotheque.ui.bookDetail.BookDetailActivity;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
 import com.aprouxdev.mabibliotheque.viewmodels.LocalBookViewModel;

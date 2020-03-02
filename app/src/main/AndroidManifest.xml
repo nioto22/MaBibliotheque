@@ -24,7 +24,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.friends.chat.discussion.SelectBookActivity"></activity>
+        <activity android:name=".ui.friends.chat.addDiscussion.AddGroupDiscussionActivity"></activity>
+        <activity android:name=".ui.friends.friends.addFriend.AddFriendActivity" />
+        <activity android:name=".ui.friends.chat.addDiscussion.AddDiscussionActivity" />
+        <activity android:name=".ui.friends.chat.discussion.SelectBookActivity" />
         <activity android:name=".ui.friends.chat.discussion.DiscussionActivity" />
         <activity android:name=".ui.friends.FriendsActivity" />
         <activity android:name=".ui.authentication.EmailPasswordActivity" />

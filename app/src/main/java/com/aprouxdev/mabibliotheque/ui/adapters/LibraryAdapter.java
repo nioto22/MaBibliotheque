@@ -1,4 +1,4 @@
-package com.aprouxdev.mabibliotheque.ui.adapter;
+package com.aprouxdev.mabibliotheque.ui.adapters;
 
 import android.content.Context;
 import android.net.Uri;

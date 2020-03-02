@@ -48,7 +48,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="@dimen/floating_button_margin_16dp"
-        android:src="@drawable/ic_add_taupe"/>
+        android:src="@drawable/ic_message_taupe"/>
 
 
 </RelativeLayout>

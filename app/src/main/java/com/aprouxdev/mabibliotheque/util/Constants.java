@@ -54,6 +54,9 @@ public class Constants {
 
     // Discussion Activity
     public static final int RC_CHOOSE_BOOK = 54;
+
+    // Tools
+    public static final String YESTERDAY = "Hier";
 }
 
 

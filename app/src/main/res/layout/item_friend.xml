@@ -1,21 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="100dp"
+    android:layout_height="120dp"
     android:layout_margin="@dimen/xs_4dp">
 
     <ImageView
         android:id="@+id/itemFriendImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:src="@drawable/ic_user_no_image"
+        android:layout_centerHorizontal="true"
         android:padding="@dimen/thin_2dp"/>
+    <ImageView
+        android:id="@+id/itemFriendSelectedImage"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignBottom="@+id/itemFriendImageView"
+        android:layout_alignEnd="@+id/itemFriendImageView"
+        android:src="@drawable/ic_check_circle"
+        android:visibility="gone"/>
     <TextView
+        android:id="@+id/itemFriendUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/itemFriendImageView"
         android:layout_centerHorizontal="true"
-        android:text="UserName"
-        android:maxLines="1"/>
+        android:gravity="top"
+        android:textSize="@dimen/text_size_12sp"
+        android:textStyle="bold"
+        android:maxLines="2"
+        android:ellipsize="end"/>
 </RelativeLayout>

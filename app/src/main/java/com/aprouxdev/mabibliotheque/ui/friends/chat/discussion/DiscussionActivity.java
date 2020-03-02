@@ -22,7 +22,7 @@ import com.aprouxdev.mabibliotheque.models.Message;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.tools.general.Tools;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
-import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.adapter.MessagesAdapter;
+import com.aprouxdev.mabibliotheque.ui.adapters.MessagesAdapter;
 import com.aprouxdev.mabibliotheque.util.Constants;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -32,6 +32,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
+import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_DISCUSSION_UID;
 import static com.aprouxdev.mabibliotheque.util.Constants.RC_CHOOSE_BOOK;
 
 public class DiscussionActivity extends BaseActivity implements MessagesAdapter.Listener, View.OnClickListener {
@@ -59,7 +60,6 @@ public class DiscussionActivity extends BaseActivity implements MessagesAdapter.
 
         this.setupViews();
         this.setupActionBar();
-        // TODO
         this.getDiscussionUid();
         this.getCurrentUserFromFirestore();
         this.configureRecyclerView(discussionUid);
@@ -86,8 +86,11 @@ public class DiscussionActivity extends BaseActivity implements MessagesAdapter.
     }
 
     private void getDiscussionUid() {
-        // TODO get extra from intent
-        // dscussionUid =
+        Intent intent = getIntent();
+        if (intent != null){
+            discussionUid = intent.getStringExtra(BUNDLE_EXTRA_DISCUSSION_UID);
+            // TODO if discussionUid == null AlertDialog Error happen
+        }
     }
 
     // --------------------
