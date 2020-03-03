@@ -1,8 +1,12 @@
 package com.aprouxdev.mabibliotheque.ui.friends.friends;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -25,12 +29,12 @@ import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.tools.general.Tools;
 import com.aprouxdev.mabibliotheque.ui.adapters.FriendAdapter;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
-import com.aprouxdev.mabibliotheque.ui.adapters.DiscussionsAdapter;
-import com.aprouxdev.mabibliotheque.ui.friends.FriendsActivity;
+import com.aprouxdev.mabibliotheque.ui.dialogFragments.FriendDetailPopup;
 import com.aprouxdev.mabibliotheque.ui.friends.chat.addDiscussion.AddDiscussionActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.chat.addDiscussion.AddGroupDiscussionActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.chat.discussion.DiscussionActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.friends.addFriend.AddFriendActivity;
+import com.aprouxdev.mabibliotheque.util.Constants;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,13 +46,16 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.aprouxdev.mabibliotheque.util.Constants.BUNDLE_EXTRA_DISCUSSION_UID;
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
+import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_SELECTED_USERS_OF_DISCUSSION;
 
 public class FriendsFragment extends Fragment {
     private static final String TAG = "FriendsFragment";
@@ -62,6 +69,8 @@ public class FriendsFragment extends Fragment {
     private FriendAdapter friendsAdapter;
     private FriendsViewModel mViewModel;
     private String bUserUid;
+    private User currentUser;
+    private SharedPreferences preferences;
 
 
     public static FriendsFragment newInstance() { return new FriendsFragment(); }
@@ -81,6 +90,8 @@ public class FriendsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        preferences = Objects.requireNonNull(getActivity()).getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
 
         getBasedVars();
         setupViews(view);
@@ -118,7 +129,7 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful() && task.getResult() != null){
-                    User currentUser = task.getResult().toObject(User.class);
+                    currentUser = task.getResult().toObject(User.class);
                     if (currentUser != null){
                         final List<String> userFriends = currentUser.getFriends();
                         Log.d(TAG, "onComplete: user friends string list size = " + userFriends.size());
@@ -170,14 +181,14 @@ public class FriendsFragment extends Fragment {
                                 // Check if it's FriendsActivity or AddDiscussionActivity or AddGroupDiscussionActivity
                                 if (parentActivityClass == AddGroupDiscussionActivity.class){
 
-                                    friendClickOnAddGroupDiscussionActivity(position);
+                                    friendClickedOnAddGroupDiscussionActivity(position);
 
                                 } else if (parentActivityClass == AddDiscussionActivity.class){
 
-                                    friendClickOnAddDiscussionActivity(friend);
+                                    friendClickedOnAddDiscussionActivity(friend);
 
                                 } else {
-                                    friendClickOnFriendsActivity(friend);
+                                    friendClickedOnFriendsActivity(friend);
                                 }
                             }
 
@@ -185,8 +196,19 @@ public class FriendsFragment extends Fragment {
                              * FriendsActivity : Friend clicked action
                              * @param friend Friend clicked
                              */
-                            private void friendClickOnFriendsActivity(User friend) {
-                                // TODO Popup friend details
+                            private void friendClickedOnFriendsActivity(User friend) {
+                                showFriendDetailPopup(friend);
+                            }
+
+                            private void showFriendDetailPopup(User friend) {
+                                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                Fragment prev = getActivity().getSupportFragmentManager().findFragmentByTag(Constants.FRIEND_DETAILS_POPUP_TAG);
+                                if (prev != null) { ft.remove(prev);}
+                                ft.addToBackStack(null);
+
+                                // Create and show the dialog.
+                                DialogFragment newFragment = FriendDetailPopup.newInstance(bUserUid, friend);
+                                newFragment.show(ft, Constants.FRIEND_DETAILS_POPUP_TAG);
                             }
 
 
@@ -197,9 +219,22 @@ public class FriendsFragment extends Fragment {
                              * UpdateAdapters and ViewHolder as selected
                              * @param position Int friendClicked Position
                              */
-                            private void friendClickOnAddGroupDiscussionActivity(int position) {
-                                friendsSelectedList.set(position, true);
+                            private void friendClickedOnAddGroupDiscussionActivity(int position) {
+                                boolean friendSelectedNewState = !friendsSelectedList.get(position);
+                                friendsSelectedList.set(position, friendSelectedNewState);
+                                putSelectedFriendsOnPreferences();
                                 friendsAdapter.notifyDataSetChanged();
+                            }
+
+                            private void putSelectedFriendsOnPreferences() {
+                                Set<String> selectedFriends = new HashSet<String>();
+                                selectedFriends.add(bUserUid);
+                                for (int i = 0; i < friendsSelectedList.size(); i++) {
+                                    if (friendsSelectedList.get(i)) selectedFriends.add(friendsList.get(i).getUid());
+                                }
+                                preferences.edit()
+                                        .putStringSet(SHARED_SELECTED_USERS_OF_DISCUSSION, selectedFriends)
+                                        .apply();
                             }
 
                             /**
@@ -209,7 +244,7 @@ public class FriendsFragment extends Fragment {
                              *  Then Open the discussion or create it
                              * @param friend Friend clicked
                              */
-                            private void friendClickOnAddDiscussionActivity(User friend) {
+                            private void friendClickedOnAddDiscussionActivity(User friend) {
                                 // Check if these users have already a discussion
                                     // Then Open the discussion or create it
                                 String friendUid = friend.getUid();

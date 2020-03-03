@@ -36,6 +36,8 @@ public class Discussion {
     public Date getDateCreated() { return dateCreated; }
     public List<String> getUsersUid() { return usersUid; }
     public List<String> getUsersName() { return usersName; }
+    public int getNumberOfUsers() {  return numberOfUsers; }
+
     // SETTER
     public void setUsersUid(List<String> usersUid) {
         this.usersUid = usersUid;
@@ -45,4 +47,5 @@ public class Discussion {
     }
     public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
     public void setUsersName(List<String> usersName) { this.usersName = usersName; }
+    public void setNumberOfUsers(int numberOfUsers) { this.numberOfUsers = numberOfUsers; }
 }

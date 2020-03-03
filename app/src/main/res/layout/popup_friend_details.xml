@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:id="@+id/popupFriendRootLayout"
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_rounded_corners_gray">
+        <TextView
+            android:id="@+id/popupFriendDetailsUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/small_8dp"
+            android:textColor="@color/text_secondary_white"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_18sp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="Friend username"/>
+        <ImageView
+            android:id="@+id/popupFriendDetailsImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_below="@+id/popupFriendDetailsUsername"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/medium_12dp"
+            android:src="@drawable/ic_user_no_image"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/popupFriendDetailsLibraryDetailsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/popupFriendDetailsImage">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/small_8dp"
+                android:paddingEnd="@dimen/small_8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/relativeLayout2"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/popupFriendDetailsBooksTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/popup_friend_details_books_title"
+                    android:textColor="@color/text_secondary_white"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/popupFriendDetailsBooksNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/xs_4dp"
+                    android:layout_below="@+id/popupFriendDetailsBooksTitle"
+                    android:textColor="@color/text_secondary_white"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/small_8dp"
+                android:paddingEnd="@dimen/small_8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/popupFriendDetailsFavoriteTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentTop="true"
+                    android:text="@string/popup_friend_details_favorites_title"
+                    android:textColor="@color/text_secondary_white"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/popupFriendDetailsFavoriteNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/xs_4dp"
+                    android:layout_below="@+id/popupFriendDetailsFavoriteTitle"
+                    android:textColor="@color/text_secondary_white"
+                    android:textSize="@dimen/text_size_12sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/popupFriendDetailsLibraryDetailsLayout"
+            android:layout_alignParentBottom="true">
+
+            <Button
+                android:id="@+id/popupSaveDiscussionCreateButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/background_turquoise"
+                android:text="@string/popup_friend_details_send_message"
+                android:textColor="@color/text_secondary_white"
+                android:textSize="@dimen/text_size_12sp"
+                android:layout_marginStart="@dimen/small_8dp"
+                android:layout_marginEnd="@dimen/xs_4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/popupSaveDiscussionCancelButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/popupSaveDiscussionCancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/background_turquoise"
+                android:text="@string/popup_friend_details_see_library"
+                android:textColor="@color/text_secondary_white"
+                android:textSize="@dimen/text_size_12sp"
+                android:layout_marginStart="@dimen/xs_4dp"
+                android:layout_marginEnd="@dimen/small_8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/popupSaveDiscussionCreateButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/popupFriendProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/popupFriendRootLayout"
+        android:layout_marginTop="@dimen/large_20dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+</RelativeLayout>

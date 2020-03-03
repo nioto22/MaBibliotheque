@@ -1,11 +1,12 @@
 package com.aprouxdev.mabibliotheque.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
 
-public class User {
+public class User implements Serializable {
 
     private String uid;
     @Nullable

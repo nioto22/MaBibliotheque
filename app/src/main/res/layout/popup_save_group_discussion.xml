@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+    <RelativeLayout
+        android:id="@+id/popupSaveDiscussionRootLayout"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/background_rounded_corners_gray">
+        <TextView
+            android:id="@+id/popupSaveDiscussionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/small_8dp"
+            android:textColor="@color/text_secondary_white"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_18sp"
+            android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:text="@string/popup_save_discussion_title"/>
+        <EditText
+            android:id="@+id/popupSaveDiscussionEditName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/popupSaveDiscussionTitle"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="@dimen/small_8dp"
+            android:layout_marginEnd="@dimen/small_8dp"
+            android:layout_marginBottom="@dimen/small_8dp"
+            android:hint="@string/popup_save_discussion_edit_name_hint"
+            android:textSize="@dimen/text_size_12sp"
+            android:textColor="@color/text_secondary_white"/>
+            <TextView
+                android:id="@+id/popupSaveDiscussionInformationText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/popupSaveDiscussionEditName"
+                android:text="@string/popup_save_discussion_information_text"
+                android:textSize="@dimen/text_size_12sp"
+                android:layout_marginStart="@dimen/small_8dp"
+                android:layout_marginEnd="@dimen/small_8dp"/>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/normal_10dp"
+            android:layout_marginEnd="@dimen/normal_10dp"
+            android:layout_marginBottom="@dimen/large_20dp">
+
+            <Button
+                android:id="@+id/popupSaveDiscussionCreateButton"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="@dimen/small_8dp"
+                android:layout_marginEnd="@dimen/xs_4dp"
+                android:background="@color/background_turquoise"
+                android:text="@string/popup_save_discussion_create_button"
+                android:textColor="@color/text_secondary_white"
+                android:textSize="@dimen/text_size_12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/popupSaveDiscussionCancelButton"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/popupSaveDiscussionCancelButton"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="@dimen/xs_4dp"
+                android:layout_marginEnd="@dimen/small_8dp"
+                android:background="@color/background_orange"
+                android:text="@string/popup_save_discussion_cancel_button"
+                android:textColor="@color/text_secondary_white"
+                android:textSize="@dimen/text_size_12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/popupSaveDiscussionCreateButton"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/popupSaveDiscussionProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/popupSaveDiscussionRootLayout"
+        android:layout_marginTop="@dimen/large_20dp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+</RelativeLayout>

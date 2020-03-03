@@ -23,10 +23,19 @@ public class Constants {
     public static final String BUNDLE_EXTRA_SELECTED_BOOK_ID = "BUNDLE_EXTRA_SELECTED_BOOK_ID";
     public static final String BUNDLE_EXTRA_SELECTED_BOOK_IMAGE = "BUNDLE_EXTRA_SELECTED_BOOK_IMAGE";
 
+    // Popup Fragment
+    public static final String FRIEND_DETAILS_POPUP_TAG = "FRIEND_DETAILS_POPUP_TAG";
+    public static final String FRIEND_DETAILS_POPUP_BUNDLE_USER_UID = "FRIEND_DETAILS_POPUP_BUNDLE_USER_UID";
+    public static final String FRIEND_DETAILS_POPUP_BUNDLE_FRIEND = "FRIEND_DETAILS_POPUP_BUNDLE_FRIEND";
+
+    public static final String DISCUSSION_SAVE_POPUP_TAG = "DISCUSSION_SAVE_POPUP_TAG";
+    public static final String DISCUSSION_SAVE_POPUP_BUNDLE_USER_UID = "DISCUSSION_SAVE_POPUP_BUNDLE_USER_UID";
+    public static final String DISCUSSION_SAVE_POPUP_BUNDLE_USERS_LIST = "DISCUSSION_SAVE_POPUP_BUNDLE_USERS_LIST";
 
     // Library data
     public static final List<Integer> SMALL_CELL_SIZE = Arrays.asList(4, 4);
     public static final List<Integer> MEDIUM_CELL_SIZE = Arrays.asList(3, 3);
+
     public enum FILTERS {
         VIEWS,
         CATEGORY,
@@ -45,7 +54,7 @@ public class Constants {
     public static final String SHARED_PREF_NO_LOGIN = "SHARED_PREF_LOGIN";
     public static final String SHARED_USER_UID = "SHARED_USER_UID";
     public static final String SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN = "SHARED_LOCAL_LIBRARY_ALREADY_ADDED_BOOLEAN";
-
+    public static final String SHARED_SELECTED_USERS_OF_DISCUSSION = "SHARED_SELECTED_USERS_OF_DISCUSSION";
 
     // Friends Activity
     public static final int FRIENDS_HOME_TAB_TAG = 0;

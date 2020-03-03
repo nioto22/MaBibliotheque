@@ -157,5 +157,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="popup_friend_details_send_message">Envoyer un message</string>
+    <string name="popup_friend_details_see_library">Voir la bibliothèque</string>
+    <string name="popup_friend_details_books_title">Livres :</string>
+    <string name="popup_friend_details_favorites_title">Coups de coeur :</string>
+    <string name="popup_save_discussion_title">Nouvelle discussion</string>
+    <string name="popup_save_discussion_create_button">Créer</string>
+    <string name="popup_save_discussion_cancel_button">Annuler</string>
+    <string name="popup_save_discussion_default_name_title">Nom par défault :</string>
+    <string name="popup_save_discussion_information_text">Veuillez donner un nom à votre groupe de discussion</string>
+    <string name="popup_save_discussion_edit_name_hint">Tapez un nom de groupe</string>
 
 </resources>
