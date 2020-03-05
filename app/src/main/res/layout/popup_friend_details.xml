@@ -47,7 +47,7 @@
                 android:paddingStart="@dimen/small_8dp"
                 android:paddingEnd="@dimen/small_8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/relativeLayout2"
+                app:layout_constraintEnd_toStartOf="@+id/addFriendResultBottomLayout"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,7 +76,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout2"
+                android:id="@+id/addFriendResultBottomLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingStart="@dimen/small_8dp"

@@ -117,6 +117,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
 
         setupViews();
         setupActionBar();
+        // TODO change title
         isItANewBook();
 
         setupData();
@@ -190,7 +191,7 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
         setupBookSecondaryInformation();
         setupBookDescription();
         setupBookComments();
-        book.getId();
+        actionBar.setTitle(book.getTitle());
     }
 
     private  void setupBookPrimaryInformation() {
@@ -202,12 +203,12 @@ public class BookDetailActivity extends BaseActivity implements View.OnClickList
                     .placeholder(R.drawable.book_placeholder)
                     .into(bookDetailImage);
         }
-        String author = (book.getAuthor() != null) ? book.getAuthor(): "Auteur non renseigné";
+        String author = (book.getAuthor() != null) ? book.getAuthor(): getTheString(R.string.unknown_author);
         bookDetailAuthor.setText(author);
 
         String readDate;
         if (book.getHasBeenRead() != null && book.getHasBeenRead()){
-            readDate = (book.getReadTimestamp() != null) ? book.getReadTimestamp() : "Lu";
+            readDate = (book.getReadTimestamp() != null) ? book.getReadTimestamp() : getTheString(R.string.read_filter_read);
         } else {
             readDate = getResources().getString(R.string.not_read_state);
         }

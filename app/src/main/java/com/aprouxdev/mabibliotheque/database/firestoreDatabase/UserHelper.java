@@ -3,15 +3,16 @@ package com.aprouxdev.mabibliotheque.database.firestoreDatabase;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import androidx.annotation.Nullable;
+
 public class UserHelper {
 
     private static final String COLLECTION_NAME = "users";
-    private static final String FRIENDS_COLLECTION_NAME = "friends";
-    private static final String DISCUSSIONS_COLLECTION_NAME = "discussions";
 
     // --- COLLECTION REFERENCE ---
 
@@ -21,10 +22,11 @@ public class UserHelper {
 
     // --- CREATE ---
 
-    public static Task<Void> createUser(String uid, Boolean isSignedInUser, String email) {
-        User userToCreate = new User(uid, isSignedInUser, email);
-        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
-    }
+    // Use CommonUserHelper
+//    public static Task<Void> createUser(String uid, Boolean isSignedInUser, String email, String username, @Nullable String urlPicture) {
+//        User userToCreate = new User(uid, username, isSignedInUser, email, urlPicture);
+//        return UserHelper.getUsersCollection().document(uid).set(userToCreate);
+//    }
 
     // --- GET ---
 
@@ -32,38 +34,44 @@ public class UserHelper {
         return UserHelper.getUsersCollection().document(uid).get();
     }
 
-    public static CollectionReference getAllDiscussionsForUser(String userUid){
+
+    public static Query getUserByMail(String email){
         return UserHelper.getUsersCollection()
-                .document(userUid)
-                .collection(DISCUSSIONS_COLLECTION_NAME);
+                .whereEqualTo("email", email);
     }
 
-    public static CollectionReference getAllFriendsForUser(String userUid){
+    public static Query getUserByUsername(String username){
         return UserHelper.getUsersCollection()
-                .document(userUid)
-                .collection(FRIENDS_COLLECTION_NAME);
+                .whereEqualTo("username", username);
     }
 
 
 
     // --- UPDATE ---
 
-    public static Task<Void> updateUsername(String username, String uid) {
-        return UserHelper.getUsersCollection().document(uid).update("username", username);
-    }
+    // Use CommonUserHelper
+//    public static Task<Void> updateUsername(String username, String uid) {
+//        return UserHelper.getUsersCollection().document(uid).update("username", username);
+//    }
 
     public static Task<Void> updateIsSignedInUser(String uid, Boolean isSignedInUser) {
         return UserHelper.getUsersCollection().document(uid).update("isSignedInUser", isSignedInUser);
     }
 
-    public static Task<Void> updateUserPicture(String uid, String urlPicture) {
-        return UserHelper.getUsersCollection().document(uid).update("urlPicture", urlPicture);
-    }
+    // Use CommonUserHelper
+//    public static Task<Void> updateUserPicture(String uid, String urlPicture) {
+//        return UserHelper.getUsersCollection().document(uid).update("urlPicture", urlPicture);
+//    }
+//
+//    public static Task<Void> updatePublicState(String uid, Boolean isAPublicUser){
+//        return UserHelper.getUsersCollection().document(uid).update("isAPublicUser", isAPublicUser);
+//    }
 
     // --- DELETE ---
 
-    public static Task<Void> deleteUser(String uid) {
-        return UserHelper.getUsersCollection().document(uid).delete();
-    }
+    // Use CommonUserHelper
+//    public static Task<Void> deleteUser(String uid) {
+//        return UserHelper.getUsersCollection().document(uid).delete();
+//    }
 
 }

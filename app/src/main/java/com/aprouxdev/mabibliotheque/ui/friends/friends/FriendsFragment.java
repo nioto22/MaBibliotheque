@@ -23,8 +23,10 @@ import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.DiscussionHelper;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.SocialUserHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
 import com.aprouxdev.mabibliotheque.models.Discussion;
+import com.aprouxdev.mabibliotheque.models.SocialUser;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.tools.general.Tools;
 import com.aprouxdev.mabibliotheque.ui.adapters.FriendAdapter;
@@ -69,7 +71,6 @@ public class FriendsFragment extends Fragment {
     private FriendAdapter friendsAdapter;
     private FriendsViewModel mViewModel;
     private String bUserUid;
-    private User currentUser;
     private SharedPreferences preferences;
 
 
@@ -115,7 +116,7 @@ public class FriendsFragment extends Fragment {
     // ------------------------
 
     private void subscribesListeners() {
-        UserHelper.getAllDiscussionsForUser(bUserUid).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        DiscussionHelper.getAllDiscussionsForUser(bUserUid).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 getAllUserFriendsInRecyclerView();
@@ -125,11 +126,11 @@ public class FriendsFragment extends Fragment {
 
     private void getAllUserFriendsInRecyclerView() {
         // Get the user and his friendsUid list
-        UserHelper.getUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        SocialUserHelper.getSocialUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful() && task.getResult() != null){
-                    currentUser = task.getResult().toObject(User.class);
+                    SocialUser currentUser = task.getResult().toObject(SocialUser.class);
                     if (currentUser != null){
                         final List<String> userFriends = currentUser.getFriends();
                         Log.d(TAG, "onComplete: user friends string list size = " + userFriends.size());
@@ -272,6 +273,7 @@ public class FriendsFragment extends Fragment {
                                         String newDiscussionUid = Tools.createNewId();
                                         String discussionName = friend.getUsername();
                                         List<String> usersListUid = Arrays.asList(bUserUid, friendUid);
+
                                         DiscussionHelper.createDiscussion(newDiscussionUid, discussionName, usersListUid)
                                                 .addOnCompleteListener(task -> {
                                                     if (task.isSuccessful() && task.getResult() != null){

@@ -1,10 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.friends.friends.addFriend.AddFriendActivity">
+    tools:context=".ui.friends.friends.addFriend.AddFriendActivity"
+    android:background="@color/background_third_taupe">
+    <TextView
+        android:id="@+id/addFriendTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="@string/add_friend_title"
+        android:textSize="22sp"
+        android:layout_margin="@dimen/large_20dp"/>
+    <RelativeLayout
+        android:id="@+id/addFriendEditTextContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addFriendTitle"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/addFriendSearchButton"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginEnd="6dp"
+        android:padding="@dimen/thin_2dp">
+        <EditText
+            android:id="@+id/addFriendEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:hint="@string/add_friend_search_edit_text_hint"
+            android:textColor="@color/text_primary_black"
+            android:background="@color/white"
+            android:padding="@dimen/small_8dp"/>
+    </RelativeLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageButton
+        android:id="@+id/addFriendSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addFriendTitle"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/addFriendEditTextContainer"
+        android:layout_alignBottom="@+id/addFriendEditTextContainer"
+        android:layout_marginEnd="@dimen/large_20dp"
+        android:src="@drawable/ic_search_white"
+        android:background="@color/background_turquoise"
+        android:padding="@dimen/small_8dp"/>
+
+    <TextView
+        android:id="@+id/addFriendInformationText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/large_20dp"
+        android:layout_marginEnd="@dimen/large_20dp"
+        android:layout_below="@+id/addFriendEditTextContainer"
+        android:gravity="center"
+        android:text="@string/add_friend_information_text"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/addFriendResultLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addFriendInformationText"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/large_20dp"
+        android:layout_marginTop="@dimen/large_20dp"
+        android:layout_marginEnd="@dimen/large_20dp"
+        android:layout_marginBottom="@dimen/large_20dp"
+        android:background="@drawable/background_rounded_corners_gray">
+
+        <ProgressBar
+            android:id="@+id/addFriendProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/medium_12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+            android:id="@+id/addFriendResultTopLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/addFriendResultBottomLayout"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <TextView
+                android:id="@+id/addFriendNoUserFindText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/add_friend_no_user_find_text"
+                android:textColor="@color/text_secondary_white"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
+
+                <ImageView
+                    android:id="@+id/addFriendFriendImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerInParent="true"
+                    android:background="@color/white"
+                    android:padding="@dimen/normal_10dp"
+                    android:src="@drawable/ic_user_no_image" />
+
+                <TextView
+                    android:id="@+id/addFriendUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/addFriendFriendImage"
+                    android:layout_marginTop="@dimen/large_20dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/addFriendResultBottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addFriendResultTopLayout"
+            app:layout_constraintVertical_bias="0.5">
+
+            <Button
+                android:id="@+id/addFriendConnectingButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/large_20dp"
+                android:background="@color/background_turquoise"
+                android:padding="@dimen/xs_4dp"
+                android:text="@string/add_friend_connecting_button"
+                android:textColor="@color/text_secondary_white"
+                android:textSize="@dimen/text_size_12sp" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

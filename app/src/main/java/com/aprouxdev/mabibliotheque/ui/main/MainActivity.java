@@ -11,11 +11,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.CommonUserHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
 import com.aprouxdev.mabibliotheque.ui.addCapturedLibrary.AddLibraryActivity;
 import com.aprouxdev.mabibliotheque.ui.authentication.LoginActivity;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.FriendsActivity;
+import com.aprouxdev.mabibliotheque.ui.profile.ProfileActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -121,7 +123,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         bUser.delete()
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
-                        UserHelper.deleteUser(bUserUid).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        CommonUserHelper.deleteCommonUser(bUserUid).commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
@@ -173,6 +175,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
             // MAIN MENU
             case R.id.mainMenuProfile: {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 return true;
             }
             case R.id.mainMenuLogout: {

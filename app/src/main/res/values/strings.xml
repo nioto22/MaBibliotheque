@@ -167,5 +167,11 @@
     <string name="popup_save_discussion_default_name_title">Nom par défault :</string>
     <string name="popup_save_discussion_information_text">Veuillez donner un nom à votre groupe de discussion</string>
     <string name="popup_save_discussion_edit_name_hint">Tapez un nom de groupe</string>
+    <string name="add_friend_title">Rechercher un ami :</string>
+    <string name="add_friend_search_edit_text_hint">Entrer un Email</string>
+    <string name="add_friend_information_text">Veuillez entrer un email pour rechercher un ami</string>
+    <string name="add_friend_no_user_find_text">Désolé, aucun profil ne correspond à cet email!</string>
+    <string name="add_friend_connecting_button">SE CONNECTER</string>
+    <string name="unknown_author">Auteur non renseigné</string>
 
 </resources>

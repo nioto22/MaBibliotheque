@@ -3,13 +3,16 @@ package com.aprouxdev.mabibliotheque.ui.friends.chat.addDiscussion;
 import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.SocialUserHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
+import com.aprouxdev.mabibliotheque.models.SocialUser;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.dialogFragments.FriendDetailPopup;
@@ -79,11 +82,11 @@ public class AddGroupDiscussionActivity extends BaseActivity implements View.OnC
     // ------------------------
 
     private void subscribeListeners() {
-        UserHelper.getUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        SocialUserHelper.getSocialUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult() != null){
-                    User currentUser = task.getResult().toObject(User.class);
+                    SocialUser currentUser = task.getResult().toObject(SocialUser.class);
                     if (currentUser != null){
                         List<String> userFriends = currentUser.getFriends();
                         if (userFriends != null && userFriends.size() > 0){
@@ -130,6 +133,13 @@ public class AddGroupDiscussionActivity extends BaseActivity implements View.OnC
         newFragment.show(ft, Constants.DISCUSSION_SAVE_POPUP_TAG);
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
     // ------------------------
     //         UI
     // ------------------------

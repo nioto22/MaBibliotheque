@@ -9,25 +9,26 @@ import androidx.annotation.Nullable;
 public class User implements Serializable {
 
     private String uid;
-    @Nullable
+    //@Nullable
     private String username;
     private Boolean isSignedInUser;
     private String email;
     @Nullable
     private String urlPicture;
-    private List<String> friends;
-    private List<String> discussions;
+    private Boolean isAPublicUser;
+
+
+    // --- CONSTRUCTORS ---
 
     public User() { }
 
-    public User(String uid, Boolean isSignedInUser, String email) {
+    public User(String uid, String username, Boolean isSignedInUser, String email, @Nullable String urlPicture) {
         this.uid = uid;
-        this.email = email;
-        this.username = null;
-        this.urlPicture = null;
+        this.username = username;
         this.isSignedInUser = isSignedInUser;
-        this.friends = new ArrayList<>();
-        this.discussions = new ArrayList<>();
+        this.email = email;
+        this.urlPicture = urlPicture;
+        this.isAPublicUser = true;
     }
 
     // --- GETTERS ---
@@ -38,12 +39,7 @@ public class User implements Serializable {
     @Nullable
     public String getUrlPicture() { return urlPicture; }
     public Boolean getIsSignedInUser() { return isSignedInUser; }
-    public List<String> getFriends() {
-        return friends;
-    }
-    public List<String> getDiscussions() {
-        return discussions;
-    }
+    public Boolean getAPublicUser() { return isAPublicUser;}
 
     // --- SETTERS ---
     public void setUsername(String username) { this.username = username; }
@@ -51,10 +47,6 @@ public class User implements Serializable {
     public void setEmail(String email) {this.email = email; }
     public void setUrlPicture(String urlPicture) { this.urlPicture = urlPicture; }
     public void setIsSignedInUser(Boolean isSignedInUser) { this.isSignedInUser = isSignedInUser; }
-
-    public void setFriends(List<String> friends) {
-        this.friends = friends;
-    }
-    public void setDiscussions(List<String> discussions) { this.discussions = discussions; }
+    public void setAPublicUser(Boolean isAPublicUser) {  this.isAPublicUser = isAPublicUser; }
 }
 

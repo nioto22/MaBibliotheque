@@ -3,6 +3,7 @@ package com.aprouxdev.mabibliotheque.ui.friends.chat.addDiscussion;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -10,7 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.SocialUserHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
+import com.aprouxdev.mabibliotheque.models.SocialUser;
 import com.aprouxdev.mabibliotheque.models.User;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.friends.friends.FriendsFragment;
@@ -71,11 +74,11 @@ public class AddDiscussionActivity extends BaseActivity implements View.OnClickL
     // ------------------------
 
     private void subscribeListeners() {
-        UserHelper.getUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        SocialUserHelper.getSocialUser(bUserUid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful() && task.getResult() != null){
-                    User currentUser = task.getResult().toObject(User.class);
+                    SocialUser currentUser = task.getResult().toObject(SocialUser.class);
                     if (currentUser != null){
                         List<String> userFriends = currentUser.getFriends();
                         if (userFriends != null && userFriends.size() > 0){
@@ -120,6 +123,13 @@ public class AddDiscussionActivity extends BaseActivity implements View.OnClickL
         startActivity(new Intent(AddDiscussionActivity.this, AddGroupDiscussionActivity.class));
     }
 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
+    }
     // ------------------------
     //         UI
     // ------------------------

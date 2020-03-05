@@ -3,6 +3,8 @@ package com.aprouxdev.mabibliotheque.ui.base;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
@@ -36,6 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected SharedPreferences bPreferences;
     protected FirebaseAuth bAuth;
     protected FirebaseUser bUser;
+    protected ActionBar actionBar;
     public String bUserUid;
 
     public boolean bIsUserPrefNoLogin;
@@ -124,10 +127,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     // UI
 
     protected void setupActionBar() {
-        ActionBar actionBar = this.getSupportActionBar();
+        actionBar = this.getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
+    // IMPLEMENTS BACKPRESS METHOD
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == android.R.id.home) {
+//            onBackPressed();
+//            return true;
+//        }
+//        return false;
+//    }
 
     // --------------------
     // ERROR HANDLER
@@ -138,6 +149,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(getApplicationContext(), getString(R.string.toast_unknown_error), Toast.LENGTH_LONG).show();
+                Log.e(TAG, "onFailure: fail on activity " + BaseActivity.this.getClass(), e);
             }
         };
     }

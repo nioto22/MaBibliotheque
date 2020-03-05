@@ -1,6 +1,7 @@
 package com.aprouxdev.mabibliotheque.ui.friends.chat.discussion;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.aprouxdev.mabibliotheque.R;
 import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
@@ -36,5 +37,13 @@ public class SelectBookActivity extends BaseActivity {
         LibraryFragment libraryFragment = new LibraryFragment();
         fragmentTransaction.add(R.id.selectBookLibraryFragment, libraryFragment);
         fragmentTransaction.commit();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return false;
     }
 }

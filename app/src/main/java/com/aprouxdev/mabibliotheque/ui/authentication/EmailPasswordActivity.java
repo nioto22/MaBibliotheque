@@ -1,5 +1,7 @@
 package com.aprouxdev.mabibliotheque.ui.authentication;
 
+import android.app.ActionBar;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,12 +9,15 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aprouxdev.mabibliotheque.R;
+import com.aprouxdev.mabibliotheque.database.firestoreDatabase.CommonUserHelper;
 import com.aprouxdev.mabibliotheque.database.firestoreDatabase.UserHelper;
+import com.aprouxdev.mabibliotheque.ui.base.BaseActivity;
 import com.aprouxdev.mabibliotheque.ui.main.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,7 +29,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NAME;
 import static com.aprouxdev.mabibliotheque.util.Constants.SHARED_PREF_NO_LOGIN;
@@ -38,6 +45,9 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
     private ProgressBar progressBar;
     private FirebaseAuth mAuth;
     private SharedPreferences preferences;
+
+    private String username;
+    private String userMail;
 
 
     @Override
@@ -77,6 +87,7 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
     // ----------------------
 
     private void createAccount(String email, String password) {
+
         resetStatusTextView();
         if (invalidForm()) return;
         showProgressBar();
@@ -88,7 +99,8 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
                         if (task.isSuccessful()){
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            addUserToFirestore(email);
+                            userMail = email;
+                            addUserToFirestore();
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             // Catch Firebase exception
@@ -108,7 +120,36 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
                 });
     }
 
+    private void askForUsername(String email, String password) {
+        EditText inputEditTextField = new EditText(this);
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Nouveau compte")
+                .setMessage("Comment voulez-vous qu-on vous appelle ?")
+                .setView(inputEditTextField, 50, 8, 50 ,8)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String editTextInput = inputEditTextField.getText().toString();
+                        if (!editTextInput.isEmpty()){
+                          username = editTextInput;
+                          createAccount(email, password);
+                        }else {
+                            Toast.makeText(EmailPasswordActivity.this, "Veuillez entrer un nom !", Toast.LENGTH_SHORT).show();
+                        }
 
+                    }
+                })
+                .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
+        alertDialog.show();
+
+
+    }
 
 
     private void signIn(String email, String password) {
@@ -122,7 +163,8 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_login_successful), Toast.LENGTH_SHORT).show();
-                            addUserToFirestore(email);
+                            userMail = email;
+                            addUserToFirestore();
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(EmailPasswordActivity.this, getTheString(R.string.email_login_activity_toast_sign_in_failure),
@@ -165,19 +207,20 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
      * Add user into firebase with UserHelper createUser method
      * On complete go back to MainActivity
      */
-    private void addUserToFirestore(String email) {
+    private void addUserToFirestore() {
         String mUserUid = mAuth.getUid();
-        UserHelper.createUser(mUserUid, true, email).addOnCompleteListener(new OnCompleteListener<Void>() {
+        CommonUserHelper.createCommonUser(mUserUid, true, userMail, username, null).commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
                     hideProgressBar();
                     navigateToMainActivity();
                 } else {
-                    Log.w(TAG, "Create User task not successful: ", task.getException());
+                    Log.w(TAG, "Create Common User task not successful: ", task.getException());
                 }
             }
-        });
+        })
+        .addOnFailureListener(this.onFailureListener("Create common User"));
     }
 
 
@@ -245,7 +288,7 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
                 signIn(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case (R.id.emailLoginCreateAccount):
-                createAccount(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                askForUsername(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case (R.id.loginPasswordLostButton):
                 sendPasswordResetEmail();
@@ -254,5 +297,18 @@ public class EmailPasswordActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    // --------------------
+    // ERROR HANDLER
+    // --------------------
+
+    protected OnFailureListener onFailureListener(String task){
+        return new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getApplicationContext(), getString(R.string.toast_unknown_error), Toast.LENGTH_LONG).show();
+                Log.e(TAG, "onFailure: Fail on " + task, e);
+            }
+        };
+    }
 
 }

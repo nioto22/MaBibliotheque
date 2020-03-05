@@ -55,6 +55,11 @@ public class DiscussionHelper {
                 .whereArrayContains(DISCUSSION_USERS_UID, users2Uid);
     }
 
+    public static Query getAllDiscussionsForUser(String userUid){
+        return DiscussionHelper.getDiscussionsCollection()
+                .whereArrayContains(DISCUSSION_USERS_UID, userUid);
+    }
+
     // --- UPDATE ---
 
     public static Task<Void> updateDiscussionName(String DiscussionName, String uid) {
